@@ -172,10 +172,6 @@ function UserInfo() {
 
     const [ticket, setTicket] = useState(null);
 
-    const [openTicket, setOpenTicket] = useState(false);
-    const handleOpenTicket = () => setOpenTicket(true);
-    const handleCloseTicket = () => setOpenTicket(false);
-
     useEffect(() => {
         if (isGenerateUser) {
             fetch("/tickets", {
@@ -196,21 +192,11 @@ function UserInfo() {
         }
     }, [generatedUser])
 
-    useEffect(() => {
-        if (ticket !== null) {
-            console.log("bilet oluşturuldu...........");
-        
-        }
-    }, [ticket])
-
     if (isGenerateUser) {
 
-        console.log("rezerve koltuklar güncellendi ve kullanıcı oluşturuldu..." + " userID:" + generatedUser.id);
+        console.log("Rezerve koltuklar güncellendi ve kullanıcı oluşturuldu..." + " userID:" + generatedUser.id);
 
     }
-
-
-
 
     if (errorAssignedMovie) {
         return <div>Error !!!</div>
@@ -220,7 +206,6 @@ function UserInfo() {
         return (
             <div>
                 <Stack direction={"row"} >
-
                     <Box style={styles.box} >
                         <Stack direction={"row"} spacing={15} justifyContent={"center"} style={styles.stack} >
                             <Box
@@ -242,13 +227,8 @@ function UserInfo() {
                                     <SeatIcon htmlColor="black" />
                                     <Typography variant="body1" color={"black"}>{selectedSeatNumbers.join(", ")}</Typography>
                                 </Stack>
-
-
                             </Stack>
-
                         </Stack>
-
-
 
                     </Box>
                     <Box flex={1}  >
@@ -260,8 +240,6 @@ function UserInfo() {
                         >
                             Kullanıcı Bilgilerini Giriniz
                         </Typography>
-
-
 
                         <Box
                             component="form"
@@ -304,10 +282,7 @@ function UserInfo() {
                                 Lütfen tüm boşlukları doldurunuz
                             </Alert>
                         </Snackbar>
-
-
                     </Box>
-
                 </Stack>
 
                 {ticket != null &&
@@ -317,8 +292,6 @@ function UserInfo() {
               </Ticket>
              
             }
-
-
 
             </div>
         )

@@ -93,7 +93,6 @@ function Seats() {
         console.log(reservedSeatNumbers);
         console.log(selectedSeats);
 
-
     }
 
     const handleAlert = () => {
@@ -219,11 +218,7 @@ function Seats() {
                             Lütfen koltuk seçiniz
                         </Alert>
                     </Snackbar>
-
-
                 </Box>
-
-
 
             </div>
 

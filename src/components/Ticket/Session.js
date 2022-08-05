@@ -133,8 +133,10 @@ function Session() {
                         console.log(time);
                         return (<TabPanel value={value} index={index}>
                             <Stack direction="row" spacing={1}>
-
-                                <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovie.id + "/seats"} clickable />
+                                {assignedMovie.hall.capacity !== assignedMovie.reservedSeats.length ?
+                                    <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovie.id + "/seats"} clickable />
+                                    : <Chip label={time+" (Dolu)"} variant="outlined"  disabled />
+                                }
 
                             </Stack>
                         </TabPanel>)
