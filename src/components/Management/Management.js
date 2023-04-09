@@ -1,10 +1,30 @@
-import { Autocomplete, Button, Stack, TextField, Typography, Snackbar, Alert, AlertTitle } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Autocomplete, Button, Stack, TextField, Typography, Snackbar, Alert, AlertTitle, Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Grid, IconButton } from "@mui/material";
+import { useState, useEffect } from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import FolderIcon from '@mui/icons-material/Folder';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+function generate(element) {
+    return [0, 1, 2].map((value) =>
+        React.cloneElement(element, {
+            key: value,
+        }),
+    );
+}
+
+const Demo = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+}));
+
 
 function Management() {
+
+    const [dense, setDense] = React.useState(false);
+    const [secondary, setSecondary] = React.useState(false);
 
     const [movieList, setMovieList] = useState([]);
     const [selectedMovie, setSelectedMovie] = useState(null);
@@ -83,7 +103,11 @@ function Management() {
     if (errorMovie || errorHall) {
         return <div>Error !!!</div>
     } else if (!isLoadedMovie || !isLoadedHall) {
-        return <div>Loading...</div>
+        (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "calc(100vh - 64px)" }}>
+                <img src={require('../../Images/gif.gif')} alt="Loading..." />
+            </Box>
+        )
     } else {
         return (
             <div>
@@ -96,11 +120,54 @@ function Management() {
                     Sinema Yönetim Ekranı
                 </Typography>
 
+
+                <Grid item xs={12} md={6} marginLeft={20} marginRight={20}>
+                    <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                        Filmleri düzenle
+                    </Typography>
+                    <Demo>
+                        <List dense={dense}>
+                            {generate(
+                                <ListItem
+                                    secondaryAction={
+                                        <IconButton edge="end" aria-label="delete">
+                                            {/* sil düzenle (modal açılsın)*/}
+                                            <DeleteIcon />
+                                            
+                                            <FolderIcon />
+                                        </IconButton>
+                                    }
+                                >
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <FolderIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary="Single-line item"
+                                        secondary={secondary ? 'Secondary text' : null}
+                                    />
+                                </ListItem>,
+                            )}
+                        </List>
+                    </Demo>
+                </Grid>
+
+                <Typography
+                    variant="h6"
+                    display="flex"
+                    justifyContent="center"
+                    mt={2}>
+                    Film Atama
+                </Typography>
+
+
+
                 <Stack direction="column"
                     justifyContent="center"
                     alignItems="center"
                     spacing={4} >
-                    <Stack direction={"row"} spacing={2} justifyContent={"center"} mt={10}>
+                    <Stack direction={"row"} spacing={2} justifyContent={"center"} mt={5}>
                         <Autocomplete
                             disablePortal
                             id="combo-box-movie"

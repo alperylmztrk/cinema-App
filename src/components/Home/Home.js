@@ -12,8 +12,11 @@ function Home() {
         fetch("/movies")
             .then(res => res.json())
             .then((result) => {
-                setIsLoaded(true);
-                setMovieList(result);
+                setTimeout(() => {
+                    setIsLoaded(true);
+                    setMovieList(result);
+                }, 1000);
+
             }, (error) => {
                 setIsLoaded(true);
                 setError(error);
@@ -24,23 +27,29 @@ function Home() {
     if (error) {
         return <div>Error !!!</div>
     } else if (!isLoaded) {
-        return <div>Loading...</div>
+        return (
+
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "calc(100vh - 64px)" }}>
+                <img src={require('../../Images/gif.gif')} alt="Loading..." />
+            </Box>
+
+        )
     } else {
         return (
             <div>
                 <Typography variant="h4" color="initial" pl={22} pt={4} pb={4}>Vizyondaki Filmler</Typography>
-            
-                    <Grid container pl={20} pr={20} >
 
-                        {
-                            movieList.map(movie => (
-                                <Grid item xs={12} md={6} lg={3}>
-                                    <Movie id={movie.id} title={movie.title} duration={movie.duration} rating={movie.rating} posterImgPath={movie.posterImgPath}> </Movie>
-                                </Grid>
-                            ))
-                        }
+                <Grid container pl={20} pr={20} >
 
-                    </Grid>
+                    {
+                        movieList.map(movie => (
+                            <Grid item xs={12} md={6} lg={3}>
+                                <Movie id={movie.id} title={movie.title} duration={movie.duration} rating={movie.rating} posterImgPath={movie.posterImgPath}> </Movie>
+                            </Grid>
+                        ))
+                    }
+
+                </Grid>
 
             </div >
         );

@@ -1,13 +1,15 @@
-import { Box, Button, Rating, Stack, Typography } from "@mui/material";
+import { Box, Button, Rating, Stack, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import popcorn from '../../Images/popcorn.jpg';
+
 
 function MovieDetail() {
     const { movieId } = useParams();
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [movie, setMovie] = useState(null);
+    //const appBarHeight = theme.mixins.toolbar.minHeight;
 
     const styles = {
 
@@ -37,22 +39,34 @@ function MovieDetail() {
     };
 
     useEffect(() => {
-        fetch("/movies/" + movieId)
-            .then(res => res.json())
-            .then((result) => {
-                setIsLoaded(true);
-                setMovie(result);
-                console.log(result);
-            }, (error) => {
-                setIsLoaded(true);
-                setError(error);
-            }
-            )
-    },[])
+        const fetchData = async () => {
+            //await new Promise(resolve => setTimeout(resolve, 2000));
+            // Veriyi burada çağırabilirsiniz
+            fetch("/movies/" + movieId)
+                .then(res => res.json())
+                .then((result) => {
+
+                    setIsLoaded(true);
+                    setMovie(result);
+                    console.log(result);
+                }, (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                }
+                )
+        };
+        fetchData();
+    }, [movieId])
     if (error) {
         return <div>Error !!!</div>
     } else if (!isLoaded) {
-        return <div>Loading...</div>
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+                <img src={require('../../Images/gif.gif')} alt="Loading..." />
+            </div>
+
+
+        );
     } else {
 
         return (

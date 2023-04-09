@@ -86,7 +86,13 @@ function Session() {
     if (error || errorAssignedMovieList) {
         return <div>Error !!!</div>
     } else if (!isLoaded || !isLoadedAssignedMovieList) {
-        return <div>Loading...</div>
+        return (
+
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "calc(100vh - 64px)" }}>
+                <img src={require('../../Images/gif.gif')} alt="Loading..." />
+            </Box>
+
+        )
     } else {
         return (
             <div>
