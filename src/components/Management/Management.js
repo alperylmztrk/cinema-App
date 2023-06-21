@@ -24,7 +24,7 @@ function Management() {
     const [hallList, sethallList] = useState([]);
     const [errorHall, setErrorHall] = useState(null);
     const [isLoadedHall, setIsLoadedHall] = useState(false);
-    
+
 
     const [assignMovieDialog, setAssignMovieDialog] = useState(false);
     const [addMovieDialog, setAddMovieDialog] = useState(false);
@@ -33,6 +33,7 @@ function Management() {
 
     const [tiklananMovieId, setTiklananMovieId] = useState(null);
 
+  
     useEffect(() => {
         fetch("/movies")
             .then(res => res.json())
@@ -81,7 +82,7 @@ function Management() {
     const openDeleteMovieDialog = (id) => {
         setDeleteMovieDialog(true);
         setTiklananMovieId(id);
-        console.log("id="+id);
+        console.log("id=" + id);
     };
     const closeDeleteMovieDialog = () => {
         setDeleteMovieDialog(false);
@@ -111,8 +112,9 @@ function Management() {
             align: "right",
 
             getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} onClick={openEditMovieDialog(params.row.id)} />} label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={openDeleteMovieDialog}/>} label="Delete" />,
+                <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} onClick={openEditMovieDialog} />} label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={openDeleteMovieDialog()}/>} label="Delete" />,
+                console.log(params.id)
             ]
         }
     ];
@@ -138,7 +140,7 @@ function Management() {
                     Sinema Yönetim Ekranı
                 </Typography>
 
-
+             
 
                 <div style={{ width: '100%', display: "flex", justifyContent: 'center' }}>
 
@@ -163,8 +165,6 @@ function Management() {
 
                     </div>
                 </div>
-
-
 
 
             </div>

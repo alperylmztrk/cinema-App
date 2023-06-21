@@ -49,6 +49,7 @@ export default function AddMovieDialog(props) {
         console.log(movieName);
         console.log(genre);
 
+
         fetch("/movies", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
@@ -69,7 +70,7 @@ export default function AddMovieDialog(props) {
             .catch((error) => console.log(error));
 
         console.log("Film eklendi..." + movieName);
-
+      
     }
 
     return (

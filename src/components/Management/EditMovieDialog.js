@@ -99,7 +99,7 @@ export default function EditMovieDialog(props) {
                 onClose={props.kapat}
 
             >
-                <DialogTitle>Film Ekleme</DialogTitle>
+                <DialogTitle>Film Düzenle</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Film bilgilerini giriniz...
@@ -141,7 +141,7 @@ export default function EditMovieDialog(props) {
                         <Button style={{ backgroundColor: "#00b9c9", marginTop: 20 }}
                             onClick={handleEkle}
                             variant="contained">
-                            Ekle
+                           Kaydet
                         </Button>
 
                     </Box>
