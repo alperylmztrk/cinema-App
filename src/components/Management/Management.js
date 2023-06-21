@@ -14,6 +14,7 @@ import { yellow } from "@mui/material/colors";
 
 import AssignMovieDialog from "./AssignMovieDialog";
 import AddMovieDialog from "./AddMovieDialog";
+import EditMovieDialog from "./EditMovieDialog";
 
 function Management() {
 
@@ -23,11 +24,14 @@ function Management() {
     const [hallList, sethallList] = useState([]);
     const [errorHall, setErrorHall] = useState(null);
     const [isLoadedHall, setIsLoadedHall] = useState(false);
+    
 
     const [assignMovieDialog, setAssignMovieDialog] = useState(false);
     const [addMovieDialog, setAddMovieDialog] = useState(false);
+    const [editMovieDialog, setEditMovieDialog] = useState(false);
+    const [deleteMovieDialog, setDeleteMovieDialog] = useState(false);
 
-
+    const [tiklananMovieId, setTiklananMovieId] = useState(null);
 
     useEffect(() => {
         fetch("/movies")
@@ -65,11 +69,23 @@ function Management() {
     const openAddMovieDialog = () => {
         setAddMovieDialog(true);
     };
-
     const closeAddMovieDialog = () => {
         setAddMovieDialog(false);
     };
-
+    const openEditMovieDialog = () => {
+        setEditMovieDialog(true);
+    };
+    const closeEditMovieDialog = () => {
+        setEditMovieDialog(false);
+    };
+    const openDeleteMovieDialog = (id) => {
+        setDeleteMovieDialog(true);
+        setTiklananMovieId(id);
+        console.log("id="+id);
+    };
+    const closeDeleteMovieDialog = () => {
+        setDeleteMovieDialog(false);
+    };
 
 
     const columns = [
@@ -94,13 +110,11 @@ function Management() {
             flex: 1,
             align: "right",
 
-            getActions: () => [
-                <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} />} label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon color="error" />} label="Delete" />,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} onClick={openEditMovieDialog(params.row.id)} />} label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={openDeleteMovieDialog}/>} label="Delete" />,
             ]
         }
-
-
     ];
 
     if (errorMovie || errorHall) {
@@ -142,6 +156,7 @@ function Management() {
                             </IconButton>
                             <AssignMovieDialog filmler={movieList} salonlar={hallList} open={assignMovieDialog} kapat={closeAssignMovieDialog} />
                             <AddMovieDialog open={addMovieDialog} kapat={closeAddMovieDialog} />
+                            <EditMovieDialog open={editMovieDialog} kapat={closeEditMovieDialog} />
 
                         </div>
                         <DataGridPro rows={movieList} columns={columns} />

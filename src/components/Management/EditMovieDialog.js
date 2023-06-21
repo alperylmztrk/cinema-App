@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function AddMovieDialog(props) {
+export default function EditMovieDialog(props) {
 
     const [movieName, setMovieName] = useState("");
     const [genre, setGenre] = useState("");
@@ -71,6 +71,25 @@ export default function AddMovieDialog(props) {
         console.log("Film eklendi..." + movieName);
 
     }
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+
+    //         fetch("/movies/" + props.movieId)
+    //             .then(res => res.json())
+    //             .then((result) => {
+
+    //                 setIsLoaded(true);
+    //                 setMovie(result);
+    //                 console.log(result);
+    //             }, (error) => {
+    //                 setIsLoaded(true);
+    //                 setError(error);
+    //             }
+    //             )
+    //     };
+    //     fetchData();
+    // }, [movieId])
 
     return (
         <div>
