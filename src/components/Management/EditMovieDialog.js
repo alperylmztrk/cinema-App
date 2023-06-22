@@ -146,7 +146,6 @@ export default function EditMovieDialog(props) {
 
                     </Box>
 
-
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={props.kapat}>Kapat</Button>

@@ -15,6 +15,7 @@ import { yellow } from "@mui/material/colors";
 import AssignMovieDialog from "./AssignMovieDialog";
 import AddMovieDialog from "./AddMovieDialog";
 import EditMovieDialog from "./EditMovieDialog";
+import DeleteMovieDialog from "./DeleteMovieDialog";
 
 function Management() {
 
@@ -32,8 +33,9 @@ function Management() {
     const [deleteMovieDialog, setDeleteMovieDialog] = useState(false);
 
     const [tiklananMovieId, setTiklananMovieId] = useState(null);
+    const [tiklananMovieTitle, setTiklananMovieTitle] = useState(null);
 
-  
+
     useEffect(() => {
         fetch("/movies")
             .then(res => res.json())
@@ -74,15 +76,16 @@ function Management() {
         setAddMovieDialog(false);
     };
     const openEditMovieDialog = () => {
+        console.log("open edit")
         setEditMovieDialog(true);
     };
     const closeEditMovieDialog = () => {
         setEditMovieDialog(false);
     };
-    const openDeleteMovieDialog = (id) => {
+    const openDeleteMovieDialog = (id, title) => {
         setDeleteMovieDialog(true);
         setTiklananMovieId(id);
-        console.log("id=" + id);
+        setTiklananMovieTitle(title)
     };
     const closeDeleteMovieDialog = () => {
         setDeleteMovieDialog(false);
@@ -113,8 +116,7 @@ function Management() {
 
             getActions: (params) => [
                 <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} onClick={openEditMovieDialog} />} label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={openDeleteMovieDialog()}/>} label="Delete" />,
-                console.log(params.id)
+                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={() => openDeleteMovieDialog(params.row.id, params.row.title)} />} label="Delete" />
             ]
         }
     ];
@@ -140,7 +142,7 @@ function Management() {
                     Sinema Yönetim Ekranı
                 </Typography>
 
-             
+
 
                 <div style={{ width: '100%', display: "flex", justifyContent: 'center' }}>
 
@@ -159,6 +161,7 @@ function Management() {
                             <AssignMovieDialog filmler={movieList} salonlar={hallList} open={assignMovieDialog} kapat={closeAssignMovieDialog} />
                             <AddMovieDialog open={addMovieDialog} kapat={closeAddMovieDialog} />
                             <EditMovieDialog open={editMovieDialog} kapat={closeEditMovieDialog} />
+                            <DeleteMovieDialog movieId={tiklananMovieId} movieName={tiklananMovieTitle} open={deleteMovieDialog} kapat={closeDeleteMovieDialog} />
 
                         </div>
                         <DataGridPro rows={movieList} columns={columns} />

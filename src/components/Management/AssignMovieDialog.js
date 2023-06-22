@@ -143,8 +143,6 @@ export default function AssignMovieDialog(props) {
                         </Alert>
                     </Snackbar>
 
-                    {console.log(selectedHall)}
-                    {console.log(selectedDateTime)}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={props.kapat}>Kapat</Button>
