@@ -159,9 +159,9 @@ function Management() {
                                 </Typography> <AddCircleIcon />
                             </IconButton>
                             <AssignMovieDialog filmler={movieList} salonlar={hallList} open={assignMovieDialog} kapat={closeAssignMovieDialog} />
-                            <AddMovieDialog open={addMovieDialog} kapat={closeAddMovieDialog} />
+                            <AddMovieDialog setMovieList={setMovieList} open={addMovieDialog} kapat={closeAddMovieDialog} />
                             <EditMovieDialog open={editMovieDialog} kapat={closeEditMovieDialog} />
-                            <DeleteMovieDialog movieId={tiklananMovieId} movieName={tiklananMovieTitle} open={deleteMovieDialog} kapat={closeDeleteMovieDialog} />
+                            <DeleteMovieDialog movieId={tiklananMovieId} movieName={tiklananMovieTitle} setMovieList={setMovieList} open={deleteMovieDialog} kapat={closeDeleteMovieDialog} />
 
                         </div>
                         <DataGridPro rows={movieList} columns={columns} />

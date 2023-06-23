@@ -11,19 +11,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 export default function DeleteMovieDialog(props) {
 
-
-
-
-
-
     const handleSil = () => {
 
-        // fetch("/movies" + props.movieId, {
-        //     method: "DELETE",
-        //     headers: { 'Content-Type': 'application/json' },
-        // })
-        return(<div>kapannn</div>);
-        
+        fetch("/movies/" + props.movieId, {
+            method: "DELETE",
+            headers: { 'Content-Type': 'application/json' },
+        }).then(response => {
+            props.setMovieList(prevList => prevList.filter(movie => movie.id !== props.movieId));
+            props.kapat();
+        })
+
+            .catch(error => console.log("hata: " + error))
+
     }
 
 
@@ -40,7 +39,7 @@ export default function DeleteMovieDialog(props) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {props.movieName} silinecek!! {props.movieId}
+                        {props.movieName} silinecek!!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -50,7 +49,7 @@ export default function DeleteMovieDialog(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-           
+
         </div>
     );
 }

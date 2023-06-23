@@ -46,9 +46,6 @@ export default function AddMovieDialog(props) {
         setPUrl(event.target.value);
     }
     const handleEkle = () => {
-        console.log(movieName);
-        console.log(genre);
-
 
         fetch("/movies", {
             method: "POST",
@@ -66,11 +63,15 @@ export default function AddMovieDialog(props) {
             }),
         })
             .then((res) => res.json())
-            .then(json => console.log(json))
+            .then(json => {
+                console.log(json);
+                props.setMovieList(json)
+                props.kapat();
+            })
             .catch((error) => console.log(error));
 
         console.log("Film eklendi..." + movieName);
-      
+
     }
 
     return (
@@ -101,7 +102,7 @@ export default function AddMovieDialog(props) {
                     >
 
                         <div>
-                            <TextField id="outlined-basic" label="Film Adı" variant="outlined" onChange={handleMovieNameChange} />
+                            <TextField id="filmAdi" label="Film Adı" variant="outlined" onChange={handleMovieNameChange} />
                             <TextField id="outlined-basic" label="Tür" variant="outlined" onChange={handleGenreChange} />
                         </div>
 
