@@ -20,6 +20,8 @@ export default function AddMovieDialog(props) {
     const [summary, setSummary] = useState("");
     const [pUrl, setPUrl] = useState("");
 
+    const [open, setOpen] = useState(false);
+
 
     const handleMovieNameChange = (event) => {
         setMovieName(event.target.value);
@@ -65,14 +67,20 @@ export default function AddMovieDialog(props) {
             .then((res) => res.json())
             .then(json => {
                 console.log(json);
-                props.setMovieList(json)
+                props.setMovieList((prevMovies) => [...prevMovies, json]);
                 props.kapat();
+                setOpen(true);
+                console.log("Film eklendi..." + movieName);
             })
             .catch((error) => console.log(error));
-
-        console.log("Film eklendi..." + movieName);
-
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
     return (
         <div>
@@ -135,6 +143,11 @@ export default function AddMovieDialog(props) {
                     <Button onClick={props.kapat}>Kapat</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    Film eklendi: {movieName}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

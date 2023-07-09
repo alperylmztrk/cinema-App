@@ -18,6 +18,7 @@ function NavBar() {
                             color: "white"
                         }} to="/">Ana Sayfa</Link>
                     </Typography>
+                    <Button href='/login' color="inherit">GİRİŞ yap</Button>
                     <Button href='/cinemaManagement' color="inherit">Admin</Button>
                 </Toolbar>
             </AppBar>

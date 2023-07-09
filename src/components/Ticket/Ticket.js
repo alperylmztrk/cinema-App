@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Stack } from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const style = {
     position: 'absolute',
@@ -52,8 +52,8 @@ function Ticket(props) {
                 </Box>
             </Modal>
 
-               { !open &&
-               navigate("/")
+            {!open &&
+                navigate("/")
             }
 
 
