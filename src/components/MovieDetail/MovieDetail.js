@@ -35,6 +35,11 @@ function MovieDetail() {
         link: {
             textDecoration: "none",
             boxShadow: "none",
+        },
+        boxImg: {
+            height: '50%',
+            maxHeight: '60vh',
+
         }
     };
 
@@ -70,7 +75,7 @@ function MovieDetail() {
     } else {
 
         return (
-            <div>
+            <div style={{ height: '100%', maxHeight: '100%' }}>
                 <Stack direction={"row"} spacing={2} style={styles.stack} p={4} pl={10} >
 
                     <Box
@@ -80,6 +85,7 @@ function MovieDetail() {
                         style={styles.boxImg}
 
                     />
+
                     <Stack direction={"column"} spacing={4} alignItems={"center"}>
 
                         <Box style={styles.data}>
