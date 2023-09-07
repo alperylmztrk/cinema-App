@@ -43,7 +43,7 @@ function Home() {
 
                     {
                         movieList.map(movie => (
-                            <Grid item xs={12} md={6} lg={3}>
+                            <Grid item xs={12} md={6} lg={2}>
                                 <Movie id={movie.id} title={movie.title} duration={movie.duration} rating={movie.rating} posterImgPath={movie.posterImgPath}> </Movie>
                             </Grid>
                         ))
