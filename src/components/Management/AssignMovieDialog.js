@@ -19,7 +19,7 @@ export default function AssignMovieDialog(props) {
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openEmpty, setOpenEmpty] = useState(false);
 
-  
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -45,12 +45,17 @@ export default function AssignMovieDialog(props) {
             }),
         })
             .then((res) => res.json())
-            .then(json => console.log(json))
+            .then(json => {
+                console.log("istek atıldı " + json)
+                props.kapat()
+                setOpenSuccess(true);
+               
+            })
             .catch((error) => console.log(error));
 
         console.log("Film atandı..." + selectedMovie.id + " " + selectedHall.id + " " + format(selectedDateTime, "dd/MM/yyyy HH:mm"));
 
-        setOpenSuccess(true);
+        
     }
 
     return (
@@ -64,7 +69,7 @@ export default function AssignMovieDialog(props) {
                 <DialogTitle>Film Atama</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                       Hangi filmin nerede ve ne zaman oynatılacağını ayarlayın.
+                        Hangi filmin nerede ve ne zaman oynatılacağını ayarlayın.
                     </DialogContentText>
                     <Stack direction="column"
                         justifyContent="center"
@@ -81,7 +86,7 @@ export default function AssignMovieDialog(props) {
                                     setSelectedMovie(newMovie);
                                 }}
                                 value={selectedMovie}
-                               disableScrollLock
+                                disableScrollLock
 
                             />
                             <Autocomplete
