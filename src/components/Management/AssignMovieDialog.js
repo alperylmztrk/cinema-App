@@ -20,13 +20,22 @@ export default function AssignMovieDialog(props) {
     const [openEmpty, setOpenEmpty] = useState(false);
 
 
-    const handleClose = (event, reason) => {
+    const handleCloseSuccess = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
+        
         setOpenSuccess(false);
+    };
+
+    const handleCloseFail = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        
         setOpenEmpty(false);
     };
+
     const handleEmptyMovieAndHall = () => {
         setOpenEmpty(true);
     }
@@ -47,14 +56,20 @@ export default function AssignMovieDialog(props) {
             .then((res) => res.json())
             .then(json => {
                 console.log("istek atıldı " + json)
-                props.kapat()
+             
                 setOpenSuccess(true);
+                console.log("open="+openSuccess)
+                console.log("open3="+openSuccess)
                
+            })
+            .finally(()=>{
+                console.log("Fetch işlemi tamamlandı. openSuccess=" + openSuccess);
+                props.kapat()
             })
             .catch((error) => console.log(error));
 
         console.log("Film atandı..." + selectedMovie.id + " " + selectedHall.id + " " + format(selectedDateTime, "dd/MM/yyyy HH:mm"));
-
+        console.log("open2="+openSuccess)
         
     }
 
@@ -129,7 +144,7 @@ export default function AssignMovieDialog(props) {
                     <Snackbar
                         open={openSuccess}
                         autoHideDuration={3500}
-                        onClose={handleClose}>
+                        onClose={handleCloseSuccess}>
                         <Alert severity="success" >
                             <AlertTitle>Başarılı</AlertTitle>
                             {selectedMovie !== null && selectedHall !== null &&
@@ -140,8 +155,8 @@ export default function AssignMovieDialog(props) {
                     </Snackbar>
                     <Snackbar
                         open={openEmpty}
-                        autoHideDuration={3000}
-                        onClose={handleClose}>
+                        autoHideDuration={2500}
+                        onClose={handleCloseFail}>
                         <Alert severity="error" >
                             <AlertTitle>Hata!!!</AlertTitle>
                             Lütfen film ve salon seçiniz
