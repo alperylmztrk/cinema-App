@@ -146,7 +146,7 @@ function Management() {
 
                 <div style={{ width: '100%', display: "flex", justifyContent: 'center' }}>
 
-                    <div style={{ height: 400, width: '100%', margin: 50 }}>
+                    <div style={{ height: '50vh', width: '100%', margin: 50 }}>
                         <div style={{ display: "flex", justifyContent: 'flex-end' }}>
                             <IconButton color="primary" aria-label="assign" onClick={openAssignMovieDialog} >
                                 <Typography variant="subtitle1" mr={1}>

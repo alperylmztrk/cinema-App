@@ -17,14 +17,15 @@ export default function AssignMovieDialog(props) {
     const [selectedDateTime, setSelectedDateTime] = useState(new Date());
 
     const [openSuccess, setOpenSuccess] = useState(false);
-    const [openEmpty, setOpenEmpty] = useState(false);
+    const [openFail, setOpenFail] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
 
     const handleCloseSuccess = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        
+
         setOpenSuccess(false);
     };
 
@@ -32,12 +33,13 @@ export default function AssignMovieDialog(props) {
         if (reason === 'clickaway') {
             return;
         }
-        
-        setOpenEmpty(false);
+
+        setOpenFail(false);
     };
 
     const handleEmptyMovieAndHall = () => {
-        setOpenEmpty(true);
+        setErrorMsg("Lütfen film ve salon seçiniz")
+        setOpenFail(true);
     }
 
     const assignMovie = () => {
@@ -46,31 +48,36 @@ export default function AssignMovieDialog(props) {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-
                 movieId: selectedMovie.id,
                 hallId: selectedHall.id,
                 startDateTime: format(selectedDateTime, "dd/MM/yyyy HH:mm"),
-
             }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    console.log("Hata oluştu. Durum Kodu: " + res.status);
+        
+                    // Hata durumunu özel olarak işleyebilirsiniz.
+                    return res.json().then((errorJson) => {
+                        console.log(errorJson)
+                        setErrorMsg(errorJson.message)
+                        setOpenFail(true);
+                        throw new Error(errorJson.message || "Sunucu hatası");
+                    });
+                }
+                return res.json()
+
+            })
             .then(json => {
                 console.log("istek atıldı " + json)
-             
-                setOpenSuccess(true);
-                console.log("open="+openSuccess)
-                console.log("open3="+openSuccess)
-               
-            })
-            .finally(()=>{
-                console.log("Fetch işlemi tamamlandı. openSuccess=" + openSuccess);
                 props.kapat()
+                setOpenSuccess(true);
+
             })
             .catch((error) => console.log(error));
 
         console.log("Film atandı..." + selectedMovie.id + " " + selectedHall.id + " " + format(selectedDateTime, "dd/MM/yyyy HH:mm"));
-        console.log("open2="+openSuccess)
-        
+
     }
 
     return (
@@ -140,34 +147,37 @@ export default function AssignMovieDialog(props) {
 
 
                     </Stack>
-
-                    <Snackbar
-                        open={openSuccess}
-                        autoHideDuration={3500}
-                        onClose={handleCloseSuccess}>
-                        <Alert severity="success" >
-                            <AlertTitle>Başarılı</AlertTitle>
-                            {selectedMovie !== null && selectedHall !== null &&
-                                selectedMovie.title + ",  " + selectedHall.name + "'e atandı ve " +
-                                "başlangıç zamanı " + format(selectedDateTime, "dd/MM/yyyy HH:mm") + " olarak ayarlandı."
-                            }
-                        </Alert>
-                    </Snackbar>
-                    <Snackbar
-                        open={openEmpty}
-                        autoHideDuration={2500}
-                        onClose={handleCloseFail}>
-                        <Alert severity="error" >
-                            <AlertTitle>Hata!!!</AlertTitle>
-                            Lütfen film ve salon seçiniz
-                        </Alert>
-                    </Snackbar>
-
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={props.kapat}>Kapat</Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar
+                sx={{ marginTop: 6 }}
+                open={openSuccess}
+                autoHideDuration={4000}
+                onClose={handleCloseSuccess}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                <Alert severity="success" >
+                    <AlertTitle>Film Atandı</AlertTitle>
+                    {selectedMovie !== null && selectedHall !== null &&
+                        selectedMovie.title + ",  " + selectedHall.name + "'e atandı ve " +
+                        "başlangıç zamanı " + format(selectedDateTime, "dd/MM/yyyy HH:mm") + " olarak ayarlandı."
+                    }
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                sx={{ marginTop: 6 }}
+                open={openFail}
+                autoHideDuration={3000}
+                onClose={handleCloseFail}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+                <Alert severity="error" >
+                    <AlertTitle>Film Atanamadı!!!</AlertTitle>
+                    {errorMsg}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
