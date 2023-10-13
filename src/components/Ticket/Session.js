@@ -17,7 +17,7 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ p: 2 }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -113,7 +113,7 @@ function Session() {
                 </Typography>
 
                 <Box display={"flex"} justifyContent={"center"} mt={5}
-                    sx={{ height: 155 }}
+                    sx={{ height: 200, bgcolor:"antiquewhite" }}
                 >
                     <Tabs
                         orientation="vertical"

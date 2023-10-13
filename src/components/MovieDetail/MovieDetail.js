@@ -37,8 +37,8 @@ function MovieDetail() {
             boxShadow: "none",
         },
         boxImg: {
-            height: '50%',
-            maxHeight: '60vh',
+         
+            maxHeight: '50vh',
 
         }
     };

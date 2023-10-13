@@ -14,10 +14,10 @@ function Movie(props) {
     const styles = {
         card: {
             margin: 20,
-            width: 250,
+            width: 220,
         },
         media: {
-            height: 350,
+            height: 320,
         },
         button: {
             backgroundColor: "#00b9c9"

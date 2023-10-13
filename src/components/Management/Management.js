@@ -143,7 +143,6 @@ function Management() {
                 </Typography>
 
 
-
                 <div style={{ width: '100%', display: "flex", justifyContent: 'center' }}>
 
                     <div style={{ height: '50vh', width: '100%', margin: 50 }}>
