@@ -38,6 +38,7 @@ function Session() {
     const [assignedMovieList, setAssignedMovieList] = useState([]);
     const [errorAssignedMovieList, setErrorAssignedMovieList] = useState(null);
     const [isLoadedAssignedMovieList, setIsLoadedAssignedMovieList] = useState(false);
+    const [dateTimeMap, setDateTimeMap] = useState(new Map());
 
     const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
         "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
@@ -56,7 +57,29 @@ function Session() {
             )
     }, [])
 
+    useEffect(() => {
+        if (assignedMovieList.length > 0) {
+            const updatedDateTimeMap = new Map(dateTimeMap);
+            assignedMovieList.map((assignedMovie) => {
+                const dateTime = new Date(assignedMovie.startDateTime);
+                const date = dateTime.getDate() + " " + monthNames[dateTime.getMonth()]
+                const time = (dateTime.getHours() < 10 ? "0" : "") + dateTime.getHours() + ":" + (dateTime.getMinutes() < 10 ? "0" : "") + dateTime.getMinutes();
+                let timeArray = [time];
+
+                if (updatedDateTimeMap.has(date)) {
+                    updatedDateTimeMap.get(date).push(time);
+                } else {
+                    updatedDateTimeMap.set(date, timeArray)
+                }
+
+            })
+            console.log(updatedDateTimeMap);
+            setDateTimeMap(updatedDateTimeMap);
+        }
+    }, [assignedMovieList])
+
     const handleChange = (event, newValue) => {
+        console.log("aaa " + newValue);
         setValue(newValue);
     };
     const handleClick = (event) => {
@@ -104,17 +127,42 @@ function Session() {
                         aria-label="Vertical tabs example"
                         sx={{ borderRight: 2, borderColor: 'divider' }}
                     >
-                        {assignedMovieList.map((assignedMovie, index) => {
-                            
-                            const dateTime = new Date(assignedMovie.startDateTime);
-                            const date = dateTime.getDate() + " " + monthNames[dateTime.getMonth()]
-        
-                            return (<Tab label={date} />)
-                        })}
-                    </Tabs>
+                        {Array.from(dateTimeMap.entries()).map(([key, value], index) =>
+                            <Tab label={key} key={index} />
+                        )}
 
+                    </Tabs>
+                    {Array.from(dateTimeMap.entries()).map(([key, deger], index) =>
+
+                        <TabPanel value={value} index={index}>
+                            <Stack direction="row" spacing={1}>
+
+                                {deger.map((time) => <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovieList[0].id + "/seats"} clickable />)
+
+                                }
+                            </Stack>
+                        </TabPanel>
+
+                    )}
 
                     {assignedMovieList.map((assignedMovie, index, array) => {
+                        <TabPanel value={value} index={index}>
+                            <Stack direction="row" spacing={1}>
+                               
+                                {console.log("aaaaaaaaa  "+ dateTimeMap.get([...dateTimeMap.keys()][index]) ) }
+                                
+                                {index=index+2}
+
+                                
+
+                            </Stack>
+                        </TabPanel>
+                    })
+                    }
+
+
+
+                    {/* {assignedMovieList.map((assignedMovie, index, array) => {
                         const dateTime = new Date(assignedMovie.startDateTime);
                         const time = (dateTime.getHours() < 10 ? "0" : "") + dateTime.getHours() + ":" + (dateTime.getMinutes() < 10 ? "0" : "") + dateTime.getMinutes();
                         return (<TabPanel value={value} index={index}>
@@ -123,11 +171,11 @@ function Session() {
                                     <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovie.id + "/seats"} clickable />
                                     : <Chip label={time + " (Dolu)"} variant="outlined" disabled />
                                 }
-                            
+
 
                             </Stack>
                         </TabPanel>)
-                    })}
+                    })} */}
 
                 </Box>
 
