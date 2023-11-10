@@ -1,6 +1,6 @@
 import { Box, Button, Rating, Stack, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import popcorn from '../../Images/popcorn.jpg';
 
 
@@ -9,6 +9,7 @@ function MovieDetail() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [movie, setMovie] = useState(null);
+    const navigate = useNavigate();
     //const appBarHeight = theme.mixins.toolbar.minHeight;
 
     const styles = {
@@ -32,15 +33,16 @@ function MovieDetail() {
             backgroundColor: "#00b9c9",
 
         },
-        link: {
-            textDecoration: "none",
-            boxShadow: "none",
-        },
         boxImg: {
-         
+
             maxHeight: '50vh',
 
         }
+    };
+
+    const handleButtonClick = () => {
+        // Butona tıklandığında yönlendirme yapılacak
+        navigate('./sessions', { state: { filmAdi: movie.title } });
     };
 
     useEffect(() => {
@@ -62,6 +64,7 @@ function MovieDetail() {
         };
         fetchData();
     }, [movieId])
+
     if (error) {
         return <div>Error !!!</div>
     } else if (!isLoaded) {
@@ -110,11 +113,11 @@ function MovieDetail() {
 
                         </Box>
 
-                        <Link to={{ pathname: './sessions' }} style={styles.link}>
-
-                            <Button style={styles.button} variant="contained">Bilet Al</Button>
-
-                        </Link>
+                        <Button style={styles.button}
+                            variant="contained"
+                            onClick={handleButtonClick}
+                        >
+                            Bilet Al</Button>
 
                     </Stack>
 

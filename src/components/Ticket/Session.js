@@ -1,9 +1,7 @@
 import { Box, Button, Chip, colors, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Rating, Stack, Tab, Tabs, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { format } from "date-fns";
-import moment from "moment";
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -25,58 +23,33 @@ function TabPanel(props) {
     );
 }
 
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
 
 
-function Session() {
+function Session(props) {
+    const location = useLocation();
+    const filmAdi = location.state?.filmAdi;
     const { movieId } = useParams();
     const [value, setValue] = useState(0);
-    const [assignedMovieList, setAssignedMovieList] = useState([]);
-    const [errorAssignedMovieList, setErrorAssignedMovieList] = useState(null);
-    const [isLoadedAssignedMovieList, setIsLoadedAssignedMovieList] = useState(false);
-    const [dateTimeMap, setDateTimeMap] = useState(new Map());
+    const [sessions, setSessions] = useState(new Map());
+    const [errorSessions, setErrorSessions] = useState(null);
+    const [isLoadedSessions, setIsLoadedSessions] = useState(false);
 
-    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
     useEffect(() => {
-        fetch("/assignedMovies?movieId=" + movieId)
+        fetch("/assignedMovies/sessions/" + movieId)
             .then(res => res.json())
             .then((result) => {
-                setIsLoadedAssignedMovieList(true);
+                setIsLoadedSessions(true);
                 console.log(result)
-                setAssignedMovieList(result);
+                setSessions(result);
+                console.log(typeof sessions)
             }, (error) => {
-                setIsLoadedAssignedMovieList(true);
-                setErrorAssignedMovieList(error);
+                setIsLoadedSessions(true);
+                setErrorSessions(error);
             }
             )
     }, [])
 
-    useEffect(() => {
-        if (assignedMovieList.length > 0) {
-            const updatedDateTimeMap = new Map(dateTimeMap);
-            assignedMovieList.map((assignedMovie) => {
-                const dateTime = new Date(assignedMovie.startDateTime);
-                const date = dateTime.getDate() + " " + monthNames[dateTime.getMonth()]
-                const time = (dateTime.getHours() < 10 ? "0" : "") + dateTime.getHours() + ":" + (dateTime.getMinutes() < 10 ? "0" : "") + dateTime.getMinutes();
-                let timeArray = [time];
-
-                if (updatedDateTimeMap.has(date)) {
-                    updatedDateTimeMap.get(date).push(time);
-                } else {
-                    updatedDateTimeMap.set(date, timeArray)
-                }
-
-            })
-            console.log(updatedDateTimeMap);
-            setDateTimeMap(updatedDateTimeMap);
-        }
-    }, [assignedMovieList])
 
     const handleChange = (event, newValue) => {
         console.log("aaa " + newValue);
@@ -87,9 +60,9 @@ function Session() {
     };
 
 
-    if (errorAssignedMovieList) {
+    if (errorSessions) {
         return <div>Error !!!</div>
-    } else if (!isLoadedAssignedMovieList) {
+    } else if (!isLoadedSessions) {
         return (
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "calc(100vh - 64px)" }}>
@@ -113,12 +86,14 @@ function Session() {
                     display="flex"
                     justifyContent="center"
                     mt={2}>
-                    {assignedMovieList[0].movieTitle}
+                    {filmAdi}
+                    {console.log(filmAdi+"aaaaaaaaaaa")}
                 </Typography>
 
-                <Box display={"flex"} justifyContent={"center"} mt={5}
-                    sx={{ height: 200, bgcolor: "#b7def7" }}
+                <Box display={"flex"} mt={5} paddingLeft={"40%"}
+                    sx={{ height: "25vh", bgcolor: "#b7def7" }}
                 >
+
                     <Tabs
                         orientation="vertical"
                         variant="scrollable"
@@ -127,55 +102,30 @@ function Session() {
                         aria-label="Vertical tabs example"
                         sx={{ borderRight: 2, borderColor: 'divider' }}
                     >
-                        {Array.from(dateTimeMap.entries()).map(([key, value], index) =>
+                        {Object.entries(sessions).map(([key, value], index) =>
                             <Tab label={key} key={index} />
                         )}
 
                     </Tabs>
-                    {Array.from(dateTimeMap.entries()).map(([key, deger], index) =>
 
+                    {Object.entries(sessions).map(([key, deger], index) =>
                         <TabPanel value={value} index={index}>
+
                             <Stack direction="row" spacing={1}>
+                                {console.log(sessions[key])}
+                                {console.log(index + " -- " + value + " -- " + sessions[key][0].time)}
 
-                                {deger.map((time) => <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovieList[0].id + "/seats"} clickable />)
+                                {deger.map((obj) =>
 
-                                }
+                                    <Chip label={obj.time}
+                                        variant="outlined" onClick={handleClick}
+                                        component="a" href={"/movies/sessions/" + obj.id + "/seats"} clickable />
+
+                                )}
+
                             </Stack>
                         </TabPanel>
-
                     )}
-
-                    {assignedMovieList.map((assignedMovie, index, array) => {
-                        <TabPanel value={value} index={index}>
-                            <Stack direction="row" spacing={1}>
-                               
-                                {console.log("aaaaaaaaa  "+ dateTimeMap.get([...dateTimeMap.keys()][index]) ) }
-                                
-                                {index=index+2}
-
-                                
-
-                            </Stack>
-                        </TabPanel>
-                    })
-                    }
-
-
-
-                    {/* {assignedMovieList.map((assignedMovie, index, array) => {
-                        const dateTime = new Date(assignedMovie.startDateTime);
-                        const time = (dateTime.getHours() < 10 ? "0" : "") + dateTime.getHours() + ":" + (dateTime.getMinutes() < 10 ? "0" : "") + dateTime.getMinutes();
-                        return (<TabPanel value={value} index={index}>
-                            <Stack direction="row" spacing={1}>
-                                {assignedMovie.hallCapacity !== assignedMovie.reservedSeatNum ?
-                                    <Chip label={time} variant="outlined" onClick={handleClick} component="a" href={"/movies/sessions/" + assignedMovie.id + "/seats"} clickable />
-                                    : <Chip label={time + " (Dolu)"} variant="outlined" disabled />
-                                }
-
-
-                            </Stack>
-                        </TabPanel>)
-                    })} */}
 
                 </Box>
 
