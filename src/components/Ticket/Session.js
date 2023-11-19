@@ -42,6 +42,8 @@ function Session(props) {
                 setIsLoadedSessions(true);
                 console.log(result)
                 setSessions(result);
+                console.log("seanslar="+sessions);
+                console.log(Object.keys(sessions).length)
                 console.log(typeof sessions)
             }, (error) => {
                 setIsLoadedSessions(true);
@@ -70,6 +72,19 @@ function Session(props) {
             </Box>
 
         )
+    } else if (Object.keys(sessions).length == 0) {
+        return (
+            <div>
+
+                <Typography
+                    variant="h5"
+                    display="flex"
+                    justifyContent="center"
+                    mt={2}>
+                    Seans yok
+                </Typography>
+            </div>
+        )
     } else {
         return (
             <div>
@@ -87,7 +102,7 @@ function Session(props) {
                     justifyContent="center"
                     mt={2}>
                     {filmAdi}
-                    {console.log(filmAdi+"aaaaaaaaaaa")}
+                    {console.log(filmAdi + "aaaaaaaaaaa")}
                 </Typography>
 
                 <Box display={"flex"} mt={5} paddingLeft={"40%"}

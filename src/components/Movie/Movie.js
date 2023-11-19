@@ -14,7 +14,7 @@ function Movie(props) {
     const styles = {
         card: {
             margin: 20,
-            width: 220,
+            width: "30vh",
         },
         media: {
             height: 320,
