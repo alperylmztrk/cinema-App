@@ -42,7 +42,7 @@ function Movie(props) {
 
                     />
                     <CardContent>
-                        <Typography gutterBottom variant="h5" component="div" fontSize={20}>
+                        <Typography gutterBottom variant="h5" component="div"  fontSize={20} noWrap>
                             {title}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">

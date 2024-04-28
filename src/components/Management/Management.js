@@ -1,10 +1,6 @@
-import { Autocomplete, Button, Stack, TextField, Typography, Snackbar, Alert, AlertTitle, Box, IconButton } from "@mui/material";
+import { Typography, Box, IconButton, Button } from "@mui/material";
 import { useState, useEffect } from "react";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,6 +12,7 @@ import AssignMovieDialog from "./AssignMovieDialog";
 import AddMovieDialog from "./AddMovieDialog";
 import EditMovieDialog from "./EditMovieDialog";
 import DeleteMovieDialog from "./DeleteMovieDialog";
+import { DataGrid } from "@mui/x-data-grid";
 
 function Management() {
 
@@ -42,12 +39,18 @@ function Management() {
             .then((result) => {
                 setIsLoadedMovie(true);
                 setMovieList(result);
+
             }, (errorMovie) => {
                 setIsLoadedMovie(true);
                 setErrorMovie(errorMovie);
             }
             )
+
+
     }, [])
+
+
+
 
     useEffect(() => {
         fetch("/halls")
@@ -91,6 +94,14 @@ function Management() {
         setDeleteMovieDialog(false);
     };
 
+    const handleEkle = () => {
+        console.log("aaaaaaaaaa")
+        if (movieList.length > 0) {
+            setMovieList([...movieList, ...movieList])
+
+        }
+
+    };
 
     const columns = [
         {
@@ -99,12 +110,12 @@ function Management() {
             width: 90,
         },
         {
-            field: 'title',
+            field: 'baslik',
             headerName: 'Film',
             width: 200
         },
         {
-            field: 'genre',
+            field: 'tur',
             headerName: 'Tür',
             width: 150,
         },
@@ -116,7 +127,7 @@ function Management() {
 
             getActions: (params) => [
                 <GridActionsCellItem icon={<EditIcon sx={{ color: yellow[400] }} onClick={openEditMovieDialog} />} label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={() => openDeleteMovieDialog(params.row.id, params.row.title)} />} label="Delete" />
+                <GridActionsCellItem icon={<DeleteIcon color="error" onClick={() => openDeleteMovieDialog(params.row.id, params.row.baslik)} />} label="Delete" />
             ]
         }
     ];
@@ -163,7 +174,8 @@ function Management() {
                             <DeleteMovieDialog movieId={tiklananMovieId} movieName={tiklananMovieTitle} setMovieList={setMovieList} open={deleteMovieDialog} kapat={closeDeleteMovieDialog} />
 
                         </div>
-                        <DataGridPro rows={movieList} columns={columns} />
+                        <DataGrid rows={movieList} columns={columns} />
+
 
                     </div>
                 </div>

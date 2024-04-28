@@ -93,7 +93,7 @@ function MovieDetail() {
 
                         <Box style={styles.data}>
                             <Typography variant="h4">
-                                {movie.title}
+                                {movie.baslik}
                             </Typography>
 
                             <Stack alignItems={"flex-end"}>
@@ -130,7 +130,7 @@ function MovieDetail() {
                     <Stack direction={"column"} spacing={0.5} pl={8} >
                         <Box display={"flex"} alignItems={"center"} >
                             <Typography variant="h6" >Tür:</Typography>
-                            <Typography variant="body1" ml={1}>{movie.genre}</Typography>
+                            <Typography variant="body1" ml={1}>{movie.tur}</Typography>
                         </Box>
                         <Box display={"flex"} alignItems={"center"} width={200} >
                             <Typography variant="h6" >Süre:</Typography>

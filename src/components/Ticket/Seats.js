@@ -133,7 +133,7 @@ function Seats() {
                     display="flex"
                     justifyContent="center"
                     mt={2}>
-                    {assignedMovie.movie.title}
+                    {assignedMovie.movieTitle}
                 </Typography>
 
                 <Box display={"flex"} flexDirection={"column"} alignItems={"center"} mt={10}>
