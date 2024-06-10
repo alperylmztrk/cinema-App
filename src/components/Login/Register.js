@@ -1,57 +1,48 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, FormControl } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import './styleLogin.css';
+import { Input, Button } from "@mui/joy";
+import "./styleLogin.css";
 
 function Register() {
+  return (
+    <div className="container">
+      <div className="heading"> Kayıt Ol</div>
+      <FormControl className="form">
+      <Input
+          className="input"
+          placeholder="Ad"
+          size="sm"
+          type="text"
+          variant="plain"
+        ></Input>
+          <Input
+          className="input"
+          placeholder="Soyad"
+          size="sm"
+          type="text"
+          variant="plain"
+        ></Input>
+        <Input
+          className="input"
+          placeholder="Kullanıcı Adı"
+          size="sm"
+          type="text"
+          variant="plain"
+        ></Input>
+        <Input
+          className="input"
+          placeholder="Parola"
+          size="sm"
+          type="password"
+          variant="plain"
+        ></Input>
+        <Button type="submit" size="sm" className="login-button">
+          Kayıt Ol
+        </Button>
+      </FormControl>
 
-    return (
-
-        <div className="container">
-            <div className="heading"> Kayıt Ol</div>
-            <form className="form" action="">
-                <input
-                    placeholder="Ad"
-                    id="name"
-                    name="name"
-                    type="text"
-                    className="input"
-                    required
-                />
-                <input
-                    placeholder="Soyad"
-                    id="surname"
-                    name="surname"
-                    type="text"
-                    className="input"
-                    required
-                />
-                <input
-                    placeholder="Kullanıcı Adı"
-                    id="username"
-                    name="username"
-                    type="text"
-                    className="input"
-                    required
-                />
-                <input
-                    placeholder="Parola"
-                    id="password"
-                    name="password"
-                    type="password"
-                    className="input"
-                    required
-                />
-
-                <input value="Kayıt Ol" type="submit" className="login-button" />
-            </form>
-
-        </div>
-
-
-    );
-
-
+    </div>
+  );
 }
-
 
 export default Register;
