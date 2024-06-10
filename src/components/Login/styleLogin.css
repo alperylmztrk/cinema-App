@@ -34,30 +34,33 @@
     box-sizing: border-box;
 }
 
-.form .input::-moz-placeholder {
-    color: rgb(170, 170, 170);
+.form .input::placeholder {
+    color: rgb(7, 158, 145);
 }
 
-.form .input::placeholder {
-    color: rgb(170, 170, 170);
-}
 
 .form .input:focus {
     outline: none;
     border-inline: 2px solid #12B1D1;
 }
 
-.form .forgot-password {
-    display: block;
-    margin-top: 10px;
-    margin-left: 10px;
+ .form .input2{
+    width: 100%;
+    background: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+    box-shadow: #cff0ff 0px 10px 10px -5px;
+    border-inline: 2px solid transparent;
+    
+    --Input-focusedHighlight: none !important;
+    --Input-placeholderColor: rgb(13, 150, 160);
 }
-
-.form .forgot-password a {
-    font-size: 11px;
-    color: #0099ff;
-    text-decoration: none;
-}
+.input2:focus-within {
+    
+    border-color: #12B1D1;
+  }
 
 .form .login-button {
     display: block;
@@ -141,3 +144,17 @@
     color: #0099ff;
     font-size: 12px;
 }
+
+.custom-input {
+    --Input-focusedInset: var(--any, );
+    --Input-focusedThickness: 0.6rem;
+    --Input-focusedHighlight: rgba(57, 224, 23, 0.25);
+  }
+  
+  .custom-input::before {
+    transition: box-shadow .15s ease-in-out;
+  }
+  
+  .custom-input:focus-within {
+    border-color: #e6ff03;
+  }
