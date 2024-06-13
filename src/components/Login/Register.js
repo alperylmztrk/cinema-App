@@ -7,10 +7,17 @@ function Register() {
   return (
     <div className="container">
       <div className="heading"> Kayıt Ol</div>
-      <FormControl className="form">
+      <form className="form" onSubmit={(event)=> {
+        event.preventDefault();
+        const formData= new FormData(event.currentTarget);
+        const formJson=Object.fromEntries(formData.entries())
+        alert(JSON.stringify(formJson)+ formJson["username"])
+      }}>
+     
       <Input
           className="input"
           placeholder="Ad"
+          name="name"
           size="sm"
           type="text"
           variant="plain"
@@ -18,6 +25,7 @@ function Register() {
           <Input
           className="input"
           placeholder="Soyad"
+          name="surname"
           size="sm"
           type="text"
           variant="plain"
@@ -25,6 +33,7 @@ function Register() {
         <Input
           className="input"
           placeholder="Kullanıcı Adı"
+          name="username"
           size="sm"
           type="text"
           variant="plain"
@@ -32,6 +41,7 @@ function Register() {
         <Input
           className="input"
           placeholder="Parola"
+          name="username"
           size="sm"
           type="password"
           variant="plain"
@@ -39,7 +49,7 @@ function Register() {
         <Button type="submit" size="sm" className="login-button">
           Kayıt Ol
         </Button>
-      </FormControl>
+   </form>
 
     </div>
   );
