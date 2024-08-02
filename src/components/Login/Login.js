@@ -1,20 +1,37 @@
 import { Box, FormControl, Stack } from "@mui/material";
-import * as React from 'react';
+import * as React from "react";
 import { Input, Button } from "@mui/joy";
 import "./styleLogin.css";
+import { useNavigate } from 'react-router-dom';
+
+import { request, setAuthToken } from "../../helpers/axios_helper";
 
 function Login() {
+
+  const navigate = useNavigate();
+
+  const submitHandler = (event) => {
+    event.preventDefault();// sayfa yenilenmesin
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+    request("POST", "/auth/generate-token", formJson)
+      .then((response) => {
+        setAuthToken(response.data)
+        console.log(response.data);
+      navigate("/")
+
+      })
+      .catch((error) => {
+        console.log("hataaa  "+error);
+        console.log(error.response.data);
+      });
+  };
 
   return (
     <div className="container">
       <div className="heading"> Giriş Yap</div>
-      <form className="form" onSubmit={(event)=> {
-        event.preventDefault();
-        const formData= new FormData(event.currentTarget);
-        const formJson=Object.fromEntries(formData.entries())
-        alert(JSON.stringify(formJson)+ formJson["username"])
-      }}>
-      <Input
+      <form className="form" onSubmit={submitHandler}>
+        <Input
           className="input"
           placeholder="Kullanıcı Adı"
           name="username"
@@ -36,14 +53,12 @@ function Login() {
           Giriş Yap
         </Button>
       </form>
-     
+
       <span className="register">
         Hesabın yok mu? <a href="/register">Kaydol</a>
       </span>
     </div>
   );
 }
-  
-
 
 export default Login;
