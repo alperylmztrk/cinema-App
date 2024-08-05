@@ -1,28 +1,28 @@
-import { Box, FormControl, Stack } from "@mui/material";
 import * as React from "react";
 import { Input, Button } from "@mui/joy";
 import "./styleLogin.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { request, setAuthToken } from "../../helpers/axios_helper";
+import { request } from "../../helpers/axios_helper";
+import { setAuthToken, setRole } from "../../helpers/auth_helper";
 
 function Login() {
-
   const navigate = useNavigate();
 
   const submitHandler = (event) => {
-    event.preventDefault();// sayfa yenilenmesin
+    event.preventDefault(); // sayfa yenilenmesin
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
     request("POST", "/auth/generate-token", formJson)
       .then((response) => {
-        setAuthToken(response.data)
+        setAuthToken(response.data.token);
+        setRole(response.data.roles);
         console.log(response.data);
-      navigate("/")
-
+        window.dispatchEvent(new Event("storage"));
+        navigate("/");
       })
       .catch((error) => {
-        console.log("hataaa  "+error);
+        console.log("hataaa  " + error);
         console.log(error.response.data);
       });
   };
