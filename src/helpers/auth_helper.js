@@ -1,29 +1,32 @@
 export const getAuthToken = () => {
-    return window.localStorage.getItem("auth_token");
-  };
-  
-  export const setAuthToken = (token) => {
-    if (token !== null) {
-      localStorage.setItem("auth_token", token);
-    } else {
-      localStorage.removeItem("auth_token");
-    }
-  };
-  export const setRole = (role) => {
-    localStorage.setItem("role", JSON.stringify(role));
-  };
-  
-  export const isAuthenticated = () => {
-    const token = localStorage.getItem("auth_token");
-    return !!token;
-  };
+  return localStorage.getItem("auth_token");
+};
 
-  export const isAdmin = () => {
-    const roles = localStorage.getItem("role");
-    return roles.includes("ADMIN");
-  };
+export const login = (token, role, name, surname) => {
+  localStorage.setItem("auth_token", token);
+  localStorage.setItem("role", JSON.stringify(role));
+  localStorage.setItem("name", name);
+  localStorage.setItem("surname", surname);
+};
 
-  export const isUser = () => {
-    const roles = localStorage.getItem("role");
-    return roles.includes("USER");
-  };
+export const logout = () => {
+  localStorage.removeItem("auth_token");
+  localStorage.removeItem("role");
+  localStorage.removeItem("name");
+  localStorage.removeItem("surname");
+};
+
+export const isAuthenticated = () => {
+  const token = localStorage.getItem("auth_token");
+  return !!token;
+};
+
+export const isAdmin = () => {
+  const roles = localStorage.getItem("role");
+  return roles && roles.includes("ADMIN");
+};
+
+export const isUser = () => {
+  const roles = localStorage.getItem("role");
+  return roles && roles.includes("USER");
+};

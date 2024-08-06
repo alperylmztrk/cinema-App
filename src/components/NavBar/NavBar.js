@@ -5,32 +5,58 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { isAuthenticated } from "../../helpers/auth_helper";
+import { isAuthenticated, isAdmin, logout } from "../../helpers/auth_helper";
+import { Logout, Settings } from "@mui/icons-material";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 
 function NavBar() {
-    const [isAuth, setIsAuth] = useState(isAuthenticated());
-    const [isAdmin, setIsAdmin] = useState(isAdmin());
+  const [isAuth, setIsAuth] = useState(isAuthenticated());
+  const [isAdmn, setIsAdmn] = useState(isAdmin());
+  const [name, setName] = useState(localStorage.getItem("name"));
+  const [surname, setSurname] = useState(localStorage.getItem("surname"));
 
-    useEffect(() => {
-        setIsAuth(isAuthenticated());
-        setIsAdmin(isAdmin());
-      }, []);
+  useEffect(() => {
+    setIsAuth(isAuthenticated());
+    setIsAdmn(isAdmin());
+  }, []);
 
-      useEffect(() => {
-        const handleStorageChange = () => {
-          setIsAuth(isAuthenticated());
-          setIsAdmin(isAdmin());
-        };
-    
-        window.addEventListener("storage", handleStorageChange);
-        
-        return () => {
-          window.removeEventListener("storage", handleStorageChange);
-        };
-      }, []);
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuth(isAuthenticated());
+      setIsAdmn(isAdmin());
+      setName(localStorage.getItem("name"));
+      setSurname(localStorage.getItem("surname"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const logoutHandler = () => {
+    logout();
+    window.location.reload();
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" flexGrow={1}>
@@ -50,9 +76,45 @@ function NavBar() {
               Giriş yap
             </Button>
           )}
-          <Button href="/cinemaManagement" color="inherit">
-            Admin
-          </Button>
+          {isAdmn && (
+            <IconButton
+              href="/cinemaManagement"
+              color="inherit"
+              title="Sinema Yönetimi"
+            >
+              <Settings></Settings>
+            </IconButton>
+          )}
+          {isAuth && (
+            <div>
+              <Button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                color="inherit"
+              >
+                {name} <br /> {surname}
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={logoutHandler}>
+                  <ListItemIcon>
+                    <Logout color="error" fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Çıkış Yap</ListItemText>
+                </MenuItem>
+              </Menu>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
