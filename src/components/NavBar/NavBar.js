@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { isAuthenticated, isAdmin, logout } from "../../helpers/auth_helper";
@@ -13,6 +12,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 function NavBar() {
@@ -95,7 +95,10 @@ function NavBar() {
                 onClick={handleClick}
                 color="inherit"
               >
-                {name} <br /> {surname}
+                <Box>
+                  <Typography variant="body2"> {name} </Typography>
+                  <Typography variant="body2"> {surname} </Typography>
+                </Box>
               </Button>
               <Menu
                 id="basic-menu"

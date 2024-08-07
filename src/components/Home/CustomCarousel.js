@@ -33,8 +33,8 @@ function CustomCarousel(props) {
                 alignItems: 'center',
                 textAlign: 'center'
             }}>
-                <h2>{props.item.baslik}</h2>
-                <p>{props.item.tur}</p>
+                <h2>{props.item.title}</h2>
+                <p>{props.item.genre}</p>
 
                 <Button >
                     Detay
