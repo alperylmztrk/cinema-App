@@ -1,4 +1,11 @@
-import { Typography, Box, IconButton, Button } from "@mui/material";
+import {
+  Typography,
+  Box,
+  IconButton,
+  Button,
+  Stack,
+  Card,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import * as React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -7,6 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import MovieIcon from "@mui/icons-material/Movie";
 import { DataGridPro, GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { yellow } from "@mui/material/colors";
+import "./managementStyle.css";
 
 import AssignMovieDialog from "./AssignMovieDialog";
 import AddMovieDialog from "./AddMovieDialog";
@@ -14,6 +22,7 @@ import EditMovieDialog from "./EditMovieDialog";
 import DeleteMovieDialog from "./DeleteMovieDialog";
 import { DataGrid } from "@mui/x-data-grid";
 import { request } from "../../helpers/axios_helper";
+import { BorderBottom } from "@mui/icons-material";
 
 function Management() {
   const [movieList, setMovieList] = useState([]);
@@ -102,7 +111,7 @@ function Management() {
     {
       field: "id",
       headerName: "No",
-      width: 90,
+      width: 50,
     },
     {
       field: "title",
@@ -112,7 +121,7 @@ function Management() {
     {
       field: "genre",
       headerName: "Tür",
-      width: 150,
+      width: 140,
     },
     {
       field: "duration",
@@ -168,9 +177,60 @@ function Management() {
   } else {
     return (
       <div>
-        <Typography variant="h3" display="flex" justifyContent="center" mt={2}>
-          Sinema Yönetim Ekranı
-        </Typography>
+        {/* <Typography variant="h3" display="flex" justifyContent="center" mt={2}>
+          Sinema Yönetimi
+        </Typography> */}
+
+        <Stack
+          marginTop={5}
+          justifyContent={"center"}
+          direction="row"
+          spacing={2}
+        >
+          <Box className="card" display={"flex"} flexDirection={"column"}>
+            <Typography
+              variant="subtitle1"
+              display="flex"
+              justifyContent="center"
+              mt={2}
+            >
+              Filmler
+            </Typography>
+
+            <DataGrid
+              sx={{
+                border: "none",
+                mx: 4,
+                my: 2,
+                " .MuiDataGrid-cell": { borderBottom: "none" },
+                overflow: "auto",
+              }}
+              rows={movieList}
+              columns={columns}
+            />
+
+            <IconButton
+              className="card-button"
+              aria-label="add"
+              style={{ color: "#0c3fca" }}
+              onClick={openAddMovieDialog}
+            >
+              <AddCircleIcon/>
+              <Typography ml={1} variant="subtitle1">Film Ekle</Typography>
+            </IconButton>
+          </Box>
+
+          <Box className="card">
+            <Typography
+              variant="subtitle1"
+              display="flex"
+              justifyContent="center"
+              mt={2}
+            >
+              Salonlar
+            </Typography>
+          </Box>
+        </Stack>
 
         <div
           style={{ width: "100%", display: "flex", justifyContent: "center" }}
@@ -221,7 +281,6 @@ function Management() {
                 kapat={closeDeleteMovieDialog}
               />
             </div>
-            <DataGrid rows={movieList} columns={columns} />
           </div>
         </div>
       </div>
