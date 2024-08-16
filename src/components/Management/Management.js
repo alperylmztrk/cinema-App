@@ -18,6 +18,7 @@ import "./managementStyle.css";
 
 import AssignMovieDialog from "./AssignMovieDialog";
 import AddMovieDialog from "./AddMovieDialog";
+import AddHallDialog from "./AddHallDialog";
 import EditMovieDialog from "./EditMovieDialog";
 import DeleteMovieDialog from "./DeleteMovieDialog";
 import { DataGrid } from "@mui/x-data-grid";
@@ -28,12 +29,13 @@ function Management() {
   const [movieList, setMovieList] = useState([]);
   const [errorMovie, setErrorMovie] = useState(null);
   const [isLoadedMovie, setIsLoadedMovie] = useState(false);
-  const [hallList, sethallList] = useState([]);
+  const [hallList, setHallList] = useState([]);
   const [errorHall, setErrorHall] = useState(null);
   const [isLoadedHall, setIsLoadedHall] = useState(false);
 
   const [assignMovieDialog, setAssignMovieDialog] = useState(false);
   const [addMovieDialog, setAddMovieDialog] = useState(false);
+  const [addHallDialog, setAddHallDialog] = useState(false);
   const [editMovieDialog, setEditMovieDialog] = useState(false);
   const [deleteMovieDialog, setDeleteMovieDialog] = useState(false);
 
@@ -50,31 +52,32 @@ function Management() {
       })
       .catch((error) => {
         console.log("hataaa  " + error);
+        console.log(error.response);
         console.log(error.response.data);
         setIsLoadedMovie(true);
-        setErrorMovie(error);
+        setErrorMovie(error.response.data);
       });
   }, []);
 
   useEffect(() => {
-    fetch("/halls")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoadedHall(true);
-          sethallList(result);
-        },
-        (errorHall) => {
-          setIsLoadedHall(true);
-          setErrorHall(errorHall);
-        }
-      );
+    request("GET", "/halls")
+      .then((response) => {
+        setIsLoadedHall(true);
+        setHallList(response.data);
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log("hataaa  " + error);
+        console.log(error.response.data);
+        setIsLoadedHall(true);
+        setErrorHall(error.response.data);
+      });
   }, []);
 
   const openAssignMovieDialog = () => {
     setAssignMovieDialog(true);
   };
-
   const closeAssignMovieDialog = () => {
     setAssignMovieDialog(false);
   };
@@ -83,6 +86,12 @@ function Management() {
   };
   const closeAddMovieDialog = () => {
     setAddMovieDialog(false);
+  };
+  const openAddHallDialog = () => {
+    setAddHallDialog(true);
+  };
+  const closeAddHallDialog = () => {
+    setAddHallDialog(false);
   };
   const openEditMovieDialog = () => {
     console.log("open edit");
@@ -100,14 +109,7 @@ function Management() {
     setDeleteMovieDialog(false);
   };
 
-  const handleEkle = () => {
-    console.log("aaaaaaaaaa");
-    if (movieList.length > 0) {
-      setMovieList([...movieList, ...movieList]);
-    }
-  };
-
-  const columns = [
+  const columnsMovie = [
     {
       field: "id",
       headerName: "No",
@@ -161,8 +163,61 @@ function Management() {
     },
   ];
 
+  const columnsHall = [
+    {
+      field: "id",
+      headerName: "No",
+      width: 50,
+    },
+    {
+      field: "name",
+      headerName: "Salon",
+      width: 200,
+    },
+    {
+      field: "capacity",
+      headerName: "Kapasite",
+      width: 140,
+    },
+    {
+      field: "actions",
+      type: "actions",
+      flex: 1,
+      align: "right",
+
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={
+            <EditIcon
+              sx={{ color: yellow[400] }}
+              onClick={openEditMovieDialog}
+            />
+          }
+          label="Edit"
+          title="Düzenle"
+        />,
+        <GridActionsCellItem
+          icon={
+            <DeleteIcon
+              color="error"
+              onClick={() =>
+                openDeleteMovieDialog(params.row.id, params.row.title)
+              }
+            />
+          }
+          label="Delete"
+          title="Sil"
+        />,
+      ],
+    },
+  ];
+
   if (errorMovie || errorHall) {
-    return <div>Error !!!</div>;
+    return (
+      <div>
+        {errorMovie.message} {errorHall.message}
+      </div>
+    );
   } else if (!isLoadedMovie || !isLoadedHall) {
     <Box
       sx={{
@@ -206,7 +261,7 @@ function Management() {
                 overflow: "auto",
               }}
               rows={movieList}
-              columns={columns}
+              columns={columnsMovie}
             />
 
             <IconButton
@@ -215,12 +270,14 @@ function Management() {
               style={{ color: "#0c3fca" }}
               onClick={openAddMovieDialog}
             >
-              <AddCircleIcon/>
-              <Typography ml={1} variant="subtitle1">Film Ekle</Typography>
+              <AddCircleIcon />
+              <Typography ml={1} variant="subtitle1">
+                Film Ekle
+              </Typography>
             </IconButton>
           </Box>
 
-          <Box className="card">
+          <Box className="card" display={"flex"} flexDirection={"column"}>
             <Typography
               variant="subtitle1"
               display="flex"
@@ -229,35 +286,48 @@ function Management() {
             >
               Salonlar
             </Typography>
+            <DataGrid
+              sx={{
+                border: "none",
+                mx: 4,
+                my: 2,
+                " .MuiDataGrid-cell": { borderBottom: "none" },
+                overflow: "auto",
+              }}
+              rows={hallList}
+              columns={columnsHall}
+            />
+
+            <IconButton
+              className="card-button"
+              aria-label="add"
+              style={{ color: "#0c3fca" }}
+              onClick={openAddHallDialog}
+            >
+              <AddCircleIcon />
+              <Typography ml={1} variant="subtitle1">
+                Salon Ekle
+              </Typography>
+            </IconButton>
           </Box>
         </Stack>
 
         <div
           style={{ width: "100%", display: "flex", justifyContent: "center" }}
         >
-          <div style={{ height: "50vh", width: "100%", margin: 50 }}>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ width: "100%", margin: 10 }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <IconButton
                 color="primary"
                 aria-label="assign"
                 onClick={openAssignMovieDialog}
               >
-                <Typography variant="subtitle1" mr={1}>
-                  Film Ata
-                </Typography>{" "}
                 <MovieIcon />
+                <Typography variant="subtitle1" ml={1}>
+                  Seans Oluştur
+                </Typography>
               </IconButton>
-              <IconButton
-                color="primary"
-                aria-label="add"
-                style={{ color: "#22EACA" }}
-                onClick={openAddMovieDialog}
-              >
-                <Typography variant="subtitle1" mr={1}>
-                  Film Ekle
-                </Typography>{" "}
-                <AddCircleIcon />
-              </IconButton>
+
               <AssignMovieDialog
                 filmler={movieList}
                 salonlar={hallList}
@@ -268,6 +338,11 @@ function Management() {
                 setMovieList={setMovieList}
                 open={addMovieDialog}
                 kapat={closeAddMovieDialog}
+              />
+              <AddHallDialog
+                setHallList={setHallList}
+                open={addHallDialog}
+                kapat={closeAddHallDialog}
               />
               <EditMovieDialog
                 open={editMovieDialog}
