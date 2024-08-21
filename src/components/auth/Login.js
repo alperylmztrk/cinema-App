@@ -15,8 +15,8 @@ function Login() {
     const formJson = Object.fromEntries(formData.entries());
     request("POST", "/auth/generate-token", formJson)
       .then((response) => {
-        const data=response.data
-       login(data.token,data.roles,data.name,data.surname)
+        const data = response.data;
+        login(data.token, data.roles, data.name, data.surname);
         console.log(response.data);
         window.dispatchEvent(new Event("storage"));
         navigate("/");

@@ -54,6 +54,7 @@ function Management() {
         console.log("hataaa  " + error);
         console.log(error.response);
         console.log(error.response.data);
+       
         setIsLoadedMovie(true);
         setErrorMovie(error.response.data);
       });
