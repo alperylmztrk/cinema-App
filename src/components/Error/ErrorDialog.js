@@ -13,6 +13,7 @@ export default function ErrorDialog({ error, onClose }) {
   const handleLoginRedirect = () => {
     onClose(); // Dialog'ı kapat
     logout();
+    window.dispatchEvent(new Event("storage"));
     navigate("/login"); // Kullanıcıyı giriş sayfasına yönlendir
    
   };

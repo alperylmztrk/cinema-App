@@ -41,6 +41,7 @@ function Management() {
 
   const [tiklananMovieId, setTiklananMovieId] = useState(null);
   const [tiklananMovieTitle, setTiklananMovieTitle] = useState(null);
+  const [tiklananMovie, setTiklananMovie] = useState(null);
 
   useEffect(() => {
     request("GET", "/movies")
@@ -54,7 +55,7 @@ function Management() {
         console.log("hataaa  " + error);
         console.log(error.response);
         console.log(error.response.data);
-       
+
         setIsLoadedMovie(true);
         setErrorMovie(error.response.data);
       });
@@ -94,8 +95,10 @@ function Management() {
   const closeAddHallDialog = () => {
     setAddHallDialog(false);
   };
-  const openEditMovieDialog = () => {
-    console.log("open edit");
+  const openEditMovieDialog = (movie) => (event) => {
+    console.log(movie);
+    console.log("ediiiiiiittttttt");
+    setTiklananMovie(movie);
     setEditMovieDialog(true);
   };
   const closeEditMovieDialog = () => {
@@ -142,7 +145,7 @@ function Management() {
           icon={
             <EditIcon
               sx={{ color: yellow[400] }}
-              onClick={openEditMovieDialog}
+              onClick={openEditMovieDialog(params.row)}
             />
           }
           label="Edit"
@@ -338,7 +341,7 @@ function Management() {
               <AddMovieDialog
                 setMovieList={setMovieList}
                 open={addMovieDialog}
-                kapat={closeAddMovieDialog}
+                onClose={closeAddMovieDialog}
               />
               <AddHallDialog
                 setHallList={setHallList}
@@ -346,8 +349,9 @@ function Management() {
                 kapat={closeAddHallDialog}
               />
               <EditMovieDialog
+                movie={tiklananMovie}
                 open={editMovieDialog}
-                kapat={closeEditMovieDialog}
+                onClose={closeEditMovieDialog}
               />
               <DeleteMovieDialog
                 movieId={tiklananMovieId}
