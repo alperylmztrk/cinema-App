@@ -1,10 +1,11 @@
-import { Button, TextField, Dialog, Box, InputAdornment } from "@mui/material";
+import { Button, TextField, Dialog, Box, InputAdornment, Snackbar, Alert } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { request } from "../../helpers/axios_helper";
 
 export default function EditMovieDialog(props) {
   const [movieName, setMovieName] = useState("");
@@ -15,6 +16,9 @@ export default function EditMovieDialog(props) {
   const [cast, setCast] = useState("");
   const [summary, setSummary] = useState("");
   const [pUrl, setPUrl] = useState("");
+
+  const [open, setOpen] = useState(false);
+
 
   const [ratingError, setRatingError] = useState(false);
   const [ratingErrorText, setRatingErrorText] = useState("");
@@ -69,49 +73,43 @@ export default function EditMovieDialog(props) {
     props.onClose();
   };
 
-  const handleEkle = () => {
-    console.log(movieName);
-    console.log(genre);
-
-    fetch("/movies", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+  const handleEdit = () => {
+    if (rating > 5) return;
+    request(
+      "PUT",
+      "/movies/" + props.movie.id,
+      JSON.stringify({
         title: movieName,
         genre: genre,
         duration: duration,
         director: director,
-        cast: cast,
+        actors: cast,
         rating: rating,
         summary: summary,
         posterImgPath: pUrl,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => console.log(json))
-      .catch((error) => console.log(error));
-
-    console.log("Film eklendi..." + movieName);
+      })
+    )
+      .then((response) => {
+        if (response.status == 200) {
+          props.setMovieList((prevMovies) => [...prevMovies, response.data]);
+          closeDialog();
+          setOpen(true);
+          console.log("Film Güncellendi..." + response.data);
+        }
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("hataaa  " + error);
+        console.log(error.response.data);
+      });
   };
 
-  // useEffect(() => {
-  //     const fetchData = async () => {
-
-  //         fetch("/movies/" + props.movieId)
-  //             .then(res => res.json())
-  //             .then((result) => {
-
-  //                 setIsLoaded(true);
-  //                 setMovie(result);
-  //                 console.log(result);
-  //             }, (error) => {
-  //                 setIsLoaded(true);
-  //                 setError(error);
-  //             }
-  //             )
-  //     };
-  //     fetchData();
-  // }, [movieId])
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -124,6 +122,7 @@ export default function EditMovieDialog(props) {
 
           <Box
             component="form"
+            mt={1}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -212,10 +211,10 @@ export default function EditMovieDialog(props) {
 
             <Button
               style={{ backgroundColor: "#00b9c9", marginTop: 20 }}
-              onClick={handleEkle}
+              onClick={handleEdit}
               variant="contained"
             >
-              Kaydet
+              Güncelle
             </Button>
           </Box>
         </DialogContent>
@@ -223,6 +222,11 @@ export default function EditMovieDialog(props) {
           <Button onClick={closeDialog}>Kapat</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+        <Alert severity="success" sx={{ width: "100%" }}>
+          Film Güncellendi: {movieName}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
