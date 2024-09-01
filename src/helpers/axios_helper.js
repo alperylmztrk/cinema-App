@@ -4,6 +4,7 @@ import { useState } from "react";
 
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.headers.post["Content-type"] = "application/json";
+axios.defaults.headers.put["Content-type"] = "application/json";
 
 export const request = (method, url, data) => {
   let headers = {};

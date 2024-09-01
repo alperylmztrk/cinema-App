@@ -1,4 +1,12 @@
-import { Button, TextField, Dialog, Box, InputAdornment, Snackbar, Alert } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Dialog,
+  Box,
+  InputAdornment,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import DialogActions from "@mui/material/DialogActions";
@@ -19,7 +27,6 @@ export default function EditMovieDialog(props) {
 
   const [open, setOpen] = useState(false);
 
-
   const [ratingError, setRatingError] = useState(false);
   const [ratingErrorText, setRatingErrorText] = useState("");
 
@@ -34,7 +41,8 @@ export default function EditMovieDialog(props) {
       setSummary(props.movie.summary || "");
       setPUrl(props.movie.posterImgPath || "");
     }
-  }, [props.movie]);
+    console.log("useefect");
+  }, [props.movie,props.open]);
 
   const handleMovieNameChange = (event) => {
     setMovieName(event.target.value);
@@ -91,7 +99,12 @@ export default function EditMovieDialog(props) {
     )
       .then((response) => {
         if (response.status == 200) {
-          props.setMovieList((prevMovies) => [...prevMovies, response.data]);
+          props.setMovieList((prevMovies) =>
+            prevMovies.map((movie) =>
+              movie.id === props.movie.id ? response.data : movie
+            )
+          );
+
           closeDialog();
           setOpen(true);
           console.log("Film Güncellendi..." + response.data);
@@ -132,6 +145,8 @@ export default function EditMovieDialog(props) {
             noValidates
             autoComplete="off"
           >
+            {" "}
+            {console.log("boxxxxxx")}
             <div>
               <TextField
                 label="Film Adı"
@@ -144,10 +159,9 @@ export default function EditMovieDialog(props) {
                 label="Tür"
                 variant="outlined"
                 onChange={handleGenreChange}
-                defaultValue={genre}
+                value={genre}
               />
             </div>
-
             <div>
               <TextField
                 id="sure"
@@ -155,7 +169,7 @@ export default function EditMovieDialog(props) {
                 variant="outlined"
                 type="number"
                 onChange={handleDurationChange}
-                defaultValue={duration}
+                value={duration}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">dk</InputAdornment>
@@ -170,7 +184,7 @@ export default function EditMovieDialog(props) {
                 error={ratingError}
                 helperText={ratingErrorText}
                 onChange={handleRatingChange}
-                defaultValue={rating}
+                value={rating}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">/5</InputAdornment>
@@ -178,37 +192,34 @@ export default function EditMovieDialog(props) {
                 }}
               />
             </div>
-
             <div>
               <TextField
                 label="Yönetmen"
                 variant="outlined"
                 onChange={handleDirectorChange}
-                defaultValue={director}
+                value={director}
               />
               <TextField
                 label="Oyuncular"
                 variant="outlined"
                 onChange={handleCastChange}
-                defaultValue={cast}
+                value={cast}
               />
             </div>
-
             <div>
               <TextField
                 label="Özet"
                 variant="outlined"
                 onChange={handleSummaryChange}
-                defaultValue={summary}
+                value={summary}
               />
               <TextField
                 label="Poster Url"
                 variant="outlined"
                 onChange={handlePUrlChange}
-                defaultValue={pUrl}
+                value={pUrl}
               />
             </div>
-
             <Button
               style={{ backgroundColor: "#00b9c9", marginTop: 20 }}
               onClick={handleEdit}

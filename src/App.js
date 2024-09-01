@@ -10,6 +10,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import { useAxiosInterceptor } from "./helpers/axios_helper";
 import ErrorDialog from "./components/Error/ErrorDialog";
+import AdminRoute from "./components/auth/AdminRoute";
 
 function App() {
   const { error, setError } = useAxiosInterceptor();
@@ -20,20 +21,20 @@ function App() {
 
   return (
     <div>
-
-
-
       <BrowserRouter>
-      <ErrorDialog error={error} onClose={handleClose} ></ErrorDialog>
+        <ErrorDialog error={error} onClose={handleClose}></ErrorDialog>
         <NavBar />
         <Routes>
           <Route exact path="/login" element={<Login />}></Route>
           <Route exact path="/register" element={<Register />}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route
-            exact
             path="/cinemaManagement"
-            element={<Management />}
+            element={
+              <AdminRoute>
+                <Management />
+              </AdminRoute>
+            }
           ></Route>
           <Route
             exact

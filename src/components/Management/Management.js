@@ -23,7 +23,6 @@ import EditMovieDialog from "./EditMovieDialog";
 import DeleteMovieDialog from "./DeleteMovieDialog";
 import { DataGrid } from "@mui/x-data-grid";
 import { request } from "../../helpers/axios_helper";
-import { BorderBottom } from "@mui/icons-material";
 
 function Management() {
   const [movieList, setMovieList] = useState([]);
@@ -352,6 +351,7 @@ function Management() {
                 movie={tiklananMovie}
                 open={editMovieDialog}
                 onClose={closeEditMovieDialog}
+                setMovieList={setMovieList}
               />
               <DeleteMovieDialog
                 movieId={tiklananMovieId}
