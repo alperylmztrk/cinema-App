@@ -145,7 +145,6 @@ export default function EditMovieDialog(props) {
             noValidates
             autoComplete="off"
           >
-            {" "}
             {console.log("boxxxxxx")}
             <div>
               <TextField

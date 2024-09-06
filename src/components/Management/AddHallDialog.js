@@ -91,7 +91,7 @@ export default function AddMovieDialog(props) {
               />
               <TextField
                 id="capacity"
-                label="Kapasite"
+                label="Koltuk Sayısı"
                 variant="outlined"
                 onChange={handleCapacityChange}
               />
