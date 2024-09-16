@@ -73,10 +73,6 @@ function UserInfo() {
         time = (dateTime.getHours() < 10 ? "0" : "") + dateTime.getHours() + ":" + (dateTime.getMinutes() < 10 ? "0" : "") + dateTime.getMinutes();
         console.log(time);
 
-        selectedReservedSeats = [...assignedMovie.reservedSeats, ...selectedSeats];
-        console.log(selectedReservedSeats);
-
-
     }
 
     const [name, setName] = useState("");
@@ -217,7 +213,7 @@ function UserInfo() {
                             <Box
                                 component="img"
                                 alt="Poster"
-                                src={assignedMovie.movie.posterImgPath}
+                                src={assignedMovie.posterImgPath}
 
                             />
                             <Stack alignSelf={"center"} spacing={2} divider={<Divider orientation="horizontal" color={"#00b9c9"} flexItem />}>

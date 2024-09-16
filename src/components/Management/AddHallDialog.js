@@ -25,14 +25,30 @@ export default function AddMovieDialog(props) {
 
   const [open, setOpen] = useState(false);
 
+  const [capacityError, setCapacityError] = useState(false);
+  const [capacityErrorText, setCapacityErrorText] = useState("");
+
   const handleHallNameChange = (event) => {
     setHallName(event.target.value);
   };
   const handleCapacityChange = (event) => {
-    setCapacity(event.target.value);
+    const value = event.target.value;
+
+    if (value > 100) {
+      setCapacityError(true);
+      setCapacityErrorText("Koltuk sayısı 100 den büyük olamaz!");
+    } else if (value % 10 != 0) {
+      setCapacityError(true);
+      setCapacityErrorText("Koltuk sayısı 10 ve katları olmalıdır.");
+    } else {
+      setCapacityError(false);
+      setCapacityErrorText("");
+    }
+    setCapacity(value);
   };
 
   const handleEkle = () => {
+    if (capacityError) return;
     request(
       "POST",
       "/halls",
@@ -43,7 +59,6 @@ export default function AddMovieDialog(props) {
     )
       .then((response) => {
         if (response.status == 200) {
-       
           props.setHallList((prevHalls) => [...prevHalls, response.data]);
           props.kapat();
           setOpen(true);
@@ -94,6 +109,8 @@ export default function AddMovieDialog(props) {
                 label="Koltuk Sayısı"
                 variant="outlined"
                 onChange={handleCapacityChange}
+                error={capacityError}
+                helperText={capacityErrorText}
               />
             </Box>
 
