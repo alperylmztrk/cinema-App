@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MovieDetail from "./components/MovieDetail/MovieDetail";
 import Home from "./components/Home/Home";
 import Session from "./components/Ticket/Session";
@@ -20,7 +20,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div style={{display:'flex', flexDirection:'column',height:'100vh'}}>
       <BrowserRouter>
         <ErrorDialog error={error} onClose={handleClose}></ErrorDialog>
         <NavBar />
