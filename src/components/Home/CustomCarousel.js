@@ -1,6 +1,7 @@
 
 import { Box, Button } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
+import { Link } from 'react-router-dom';
 
 
 const images = ['https://picsum.photos/seed/picsum/536/354', 'https://picsum.photos/id/1084/536/354?grayscale']
@@ -36,9 +37,11 @@ function CustomCarousel(props) {
                 <h2>{props.item.title}</h2>
                 <p>{props.item.genre}</p>
 
-                <Button >
-                    Detay
-                </Button>
+                <Link to={{ pathname: '/movies/' + props.item.id }} >
+                        <Button>
+                            Detay
+                        </Button>
+                    </Link>
             </Box>
         )
     };

@@ -17,18 +17,20 @@ import { Link, useParams } from "react-router-dom";
 import { request } from "../../helpers/axios_helper";
 
 function Seats() {
-  const { assignedMovieId } = useParams();
+  const { sessionId } = useParams();
 
   const [reservedSeats, setReservedSeats] = useState([]);
   const [reservedSeatNumbers, setReservedSeatNumbers] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
 
+  const [reservedSeatIds, setReservedSeatIds] = useState([]);
+
   const [seatList, setSeatList] = useState([]);
   const [isLoadedSeatList, setIsLoadedSeatList] = useState(false);
   const [errorSeatList, setErrorSeatList] = useState(null);
-  const [assignedMovie, setAssignedMovie] = useState();
-  const [isLoadedAssignedMovie, setIsLoadedAssignedMovie] = useState(false);
-  const [errorAssignedMovie, setErrorAssignedMovie] = useState(null);
+  const [session, setSession] = useState();
+  const [isLoadedSession, setIsLoadedSession] = useState(false);
+  const [errorsession, setErrorsession] = useState(null);
 
   const [capacity, setCapacity] = useState(0);
 
@@ -41,19 +43,20 @@ function Seats() {
   const columns = Array.from({ length: 10 }, (_, i) => i + 1); // 1'den 10'a kadar sütunlar
 
   useEffect(() => {
-    request("GET", "assignedMovies/" + assignedMovieId)
+    request("GET", "sessions/" + sessionId)
       .then((response) => {
         console.log(response.data);
-        setAssignedMovie(response.data);
-        setIsLoadedAssignedMovie(true);
+        setSession(response.data);
+        setIsLoadedSession(true);
         setCapacity(response.data.hallCapacity);
+        setReservedSeatIds(response.data.reservedSeatIds);
       })
       .catch((error) => {
         console.log("hataaa  " + error);
         console.log(error.response);
         console.log(error.response.data);
-        setIsLoadedAssignedMovie(true);
-        setErrorAssignedMovie(error);
+        setIsLoadedSession(true);
+        setErrorsession(error);
       });
   }, []);
 
@@ -76,7 +79,7 @@ function Seats() {
   }, [capacity]);
 
   //use effectin içine almayı dene
-  if (isLoadedAssignedMovie) {
+  if (isLoadedSession) {
     reservedSeats.map((reservedSeat) => {
       if (!reservedSeatNumbers.includes(reservedSeat.number)) {
         reservedSeatNumbers.push(reservedSeat.number);
@@ -110,7 +113,7 @@ function Seats() {
 
   const handleAlert = () => {
     setOpen(true);
-    console.log(assignedMovie.movie);
+    console.log(session.movie);
     console.log(reservedSeats);
   };
   const handleClose = (event, reason) => {
@@ -121,9 +124,9 @@ function Seats() {
     setOpen(false);
   };
 
-  if (errorAssignedMovie || errorSeatList) {
+  if (errorsession || errorSeatList) {
     return <div>Error !!!</div>;
-  } else if (!isLoadedAssignedMovie || !isLoadedSeatList) {
+  } else if (!isLoadedSession || !isLoadedSeatList) {
     return (
       <Box
         sx={{
@@ -143,7 +146,7 @@ function Seats() {
           Koltuk Seçiniz
         </Typography>
         <Typography variant="h5" display="flex" justifyContent="center" mt={2}>
-          {assignedMovie.movieTitle}
+          {session.movieTitle}
         </Typography>
 
         <Box
@@ -171,7 +174,7 @@ function Seats() {
                         onClick={() => handleSelectedSeats(key)}
                         key={key}
                       >
-                        {reservedSeatNumbers.includes(seat.number) ? (
+                        {reservedSeatIds.includes(seat.id) ? (
                           <SeatIconFilled htmlColor="#00b9c9" />
                         ) : selectedSeats.includes(seat) ? (
                           <SeatIconFilled htmlColor="#eb493d" />

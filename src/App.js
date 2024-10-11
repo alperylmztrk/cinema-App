@@ -48,12 +48,12 @@ function App() {
           ></Route>
           <Route
             exact
-            path="/movies/sessions/:assignedMovieId/seats"
+            path="/movies/sessions/:sessionId/seats"
             element={<Seats />}
           ></Route>
           <Route
             exact
-            path="/movies/sessions/:assignedMovieId/seats/userInfo"
+            path="/movies/sessions/:sessionId/seats/userInfo"
             element={<UserInfo />}
           ></Route>
         </Routes>

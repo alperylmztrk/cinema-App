@@ -34,7 +34,7 @@ function UserInfo() {
     },
   };
 
-  const { assignedMovieId } = useParams();
+  const { sessionId } = useParams();
   const location = useLocation();
 
   useEffect(() => {
@@ -43,15 +43,18 @@ function UserInfo() {
 
   let selectedSeats = [];
   let selectedSeatNumbers = [];
+  let selectedSeatIds = []
 
   selectedSeats = location.state.selectedSeats;
   selectedSeats.map((selectedSeat) => {
     selectedSeatNumbers.push(selectedSeat.number);
+    selectedSeatIds.push(selectedSeat.id)
   });
   selectedSeatNumbers = selectedSeatNumbers.sort(function (a, b) {
     return a.localeCompare(b, "en", { numeric: true });
   });
   console.log(selectedSeatNumbers);
+  console.log(selectedSeatIds);
 
   const [assignedMovie, setAssignedMovie] = useState();
   const [isLoadedAssignedMovie, setIsLoadedAssignedMovie] = useState(false);
@@ -91,7 +94,7 @@ function UserInfo() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    request("GET", "assignedMovies/" + assignedMovieId)
+    request("GET", "sessions/" + sessionId)
       .then((response) => {
         console.log(response.data);
         setAssignedMovie(response.data);
@@ -102,77 +105,37 @@ function UserInfo() {
         setIsLoadedAssignedMovie(true);
         setErrorAssignedMovie(error);
       });
-  }, [assignedMovieId]);
+  }, [sessionId]);
 
  
   const handleClick = () => {
-    console.log(name);
-    console.log(surname);
-    console.log(username);
+  
+    request(
+        "POST",
+        "/tickets",
+        JSON.stringify({
+          sessionId: sessionId,
+          selectedSeatIds: selectedSeatIds
+        })
+      )
+        .then((response) => {
+          if (response.status == 200) {
+          
+            console.log("Bilet oluşturuldu..." );
+          }
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log("hataaa  " + error);
+          console.log(error.response.data);
+        });
+    
 
-    fetch("/assignedMovies/" + assignedMovieId, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        //id: assignedMovieId,
-        movieId: assignedMovie.movie.id,
-        hallId: assignedMovie.hall.id,
-        startDateTime: format(dateTime, "dd/MM/yyyy HH:mm"),
-        reservedSeats: selectedReservedSeats,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => console.log(json))
-      .catch((error) => console.log(error));
-
-    fetch("/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name,
-        surname: surname,
-        username: username,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        setGeneratedUser(json);
-        setIsGenerateUser(true);
-        console.log(json);
-      })
-      .catch((error) => console.log(error));
   };
 
   const [ticket, setTicket] = useState(null);
 
-  useEffect(() => {
-    if (isGenerateUser) {
-      fetch("/tickets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: generatedUser.id,
-          assignedMovieId: assignedMovieId,
-          seatNumber: selectedSeatNumbers.toString(),
-        }),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          setTicket(json);
-          console.log(json);
-        })
-        .catch((error) => console.log(error));
-    }
-  }, [generatedUser]);
-
-  if (isGenerateUser) {
-    console.log(
-      "Rezerve koltuklar güncellendi ve kullanıcı oluşturuldu..." +
-        " userID:" +
-        generatedUser.id
-    );
-  }
-
+ 
   if (errorAssignedMovie) {
     return <div>Error !!!</div>;
   } else if (!isLoadedAssignedMovie) {
@@ -252,7 +215,8 @@ function UserInfo() {
 
             <Button
               variant="contained"
-              sx={{ backgroundColor: "#00b9c9", width: "50%" }}
+              sx={{ backgroundColor: "#00b9c9", width: "40%" }}
+              onClick={handleClick}
             >
               Onayla
             </Button>

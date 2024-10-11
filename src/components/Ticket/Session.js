@@ -36,7 +36,7 @@ function Session(props) {
 
 
     useEffect(() => {
-        fetch("/assignedMovies/sessions/" + movieId)
+        fetch("/sessions/sessions/" + movieId)
             .then(res => res.json())
             .then((result) => {
                 setIsLoadedSessions(true);

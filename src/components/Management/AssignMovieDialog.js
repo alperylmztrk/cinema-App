@@ -55,7 +55,7 @@ export default function AssignMovieDialog(props) {
   const assignMovie = () => {
     request(
       "POST",
-      "/assignedMovies",
+      "/sessions",
       JSON.stringify({
         movieId: selectedMovie.id,
         hallId: selectedHall.id,

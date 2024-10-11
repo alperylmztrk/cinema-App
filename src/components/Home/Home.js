@@ -11,23 +11,6 @@ function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
 
-//   useEffect(() => {
-//     fetch("/movies")
-//       .then((res) => res.json())
-//       .then(
-//         (result) => {
-//           setTimeout(() => {
-//             setIsLoaded(true);
-//             setMovieList(result);
-//           }, 1000);
-//         },
-//         (error) => {
-//           setIsLoaded(true);
-//           setError(error);
-//         }
-//       );
-//   }, []);
-
   useEffect(() => {
     request("GET", "/movies", {}).then(
       (response) => {
@@ -80,7 +63,6 @@ function Home() {
                 rating={movie.rating}
                 posterImgPath={movie.posterImgPath}
               >
-                {" "}
               </Movie>
             </Grid>
           ))}
