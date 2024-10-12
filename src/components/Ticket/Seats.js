@@ -225,7 +225,7 @@ function Seats() {
 
           {selectedSeats.length !== 0 ? (
             <Link
-              to={{ pathname: "./userInfo" }}
+              to={{ pathname: "./summary" }}
               style={{ textDecoration: "none", boxShadow: "none" }}
               state={{ selectedSeats: selectedSeats }}
             >

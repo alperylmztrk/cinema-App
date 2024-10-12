@@ -2,9 +2,7 @@ import {
   Typography,
   Box,
   IconButton,
-  Button,
   Stack,
-  Card,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import * as React from "react";
@@ -12,11 +10,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import MovieIcon from "@mui/icons-material/Movie";
-import { DataGridPro, GridActionsCellItem } from "@mui/x-data-grid-pro";
+import {  GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { yellow } from "@mui/material/colors";
 import "./managementStyle.css";
 
-import AssignMovieDialog from "./AssignMovieDialog";
+import SessionDialog from "./SessionDialog";
 import AddMovieDialog from "./AddMovieDialog";
 import AddHallDialog from "./AddHallDialog";
 import EditMovieDialog from "./EditMovieDialog";
@@ -32,7 +30,7 @@ function Management() {
   const [errorHall, setErrorHall] = useState(null);
   const [isLoadedHall, setIsLoadedHall] = useState(false);
 
-  const [assignMovieDialog, setAssignMovieDialog] = useState(false);
+  const [sessionDialog, setSessionDialog] = useState(false);
   const [addMovieDialog, setAddMovieDialog] = useState(false);
   const [addHallDialog, setAddHallDialog] = useState(false);
   const [editMovieDialog, setEditMovieDialog] = useState(false);
@@ -76,11 +74,11 @@ function Management() {
       });
   }, []);
 
-  const openAssignMovieDialog = () => {
-    setAssignMovieDialog(true);
+  const openSessionDialog = () => {
+    setSessionDialog(true);
   };
-  const closeAssignMovieDialog = () => {
-    setAssignMovieDialog(false);
+  const closeSessionDialog = () => {
+    setSessionDialog(false);
   };
   const openAddMovieDialog = () => {
     setAddMovieDialog(true);
@@ -323,7 +321,7 @@ function Management() {
               <IconButton
                 color="primary"
                 aria-label="assign"
-                onClick={openAssignMovieDialog}
+                onClick={openSessionDialog}
               >
                 <MovieIcon />
                 <Typography variant="subtitle1" ml={1}>
@@ -331,11 +329,11 @@ function Management() {
                 </Typography>
               </IconButton>
 
-              <AssignMovieDialog
+              <SessionDialog
                 filmler={movieList}
                 salonlar={hallList}
-                open={assignMovieDialog}
-                kapat={closeAssignMovieDialog}
+                open={sessionDialog}
+                kapat={closeSessionDialog}
               />
               <AddMovieDialog
                 setMovieList={setMovieList}

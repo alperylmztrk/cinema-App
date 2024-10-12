@@ -24,8 +24,10 @@ function Ticket(props) {
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(true);
-    const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [name, setName] = useState(localStorage.getItem("name"));
+    const [surname, setSurname] = useState(localStorage.getItem("surname"));
 
     return (
         <div>
@@ -41,7 +43,7 @@ function Ticket(props) {
                         Biletiniz Oluşturuldu
                     </Typography>
                     <Stack direction={"row"} spacing={20} mt={2}>
-                        <Typography variant="body1" color="initial">{user.name + " " + user.surname}</Typography>
+                        <Typography variant="body1" color="initial">{name+ " " + surname}</Typography>
                         <Stack>
                             <Typography variant="body1" color="initial">{startDate}</Typography>
                             <Typography variant="body1" color="initial">{startTime}</Typography>

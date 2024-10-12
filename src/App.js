@@ -5,12 +5,12 @@ import Session from "./components/Ticket/Session";
 import Seats from "./components/Ticket/Seats";
 import NavBar from "./components/NavBar/NavBar";
 import Management from "./components/Management/Management";
-import UserInfo from "./components/Ticket/UserInfo";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import { useAxiosInterceptor } from "./helpers/axios_helper";
 import ErrorDialog from "./components/Error/ErrorDialog";
 import AdminRoute from "./components/auth/AdminRoute";
+import Summary from "./components/Ticket/Summary";
 
 function App() {
   const { error, setError } = useAxiosInterceptor();
@@ -53,8 +53,8 @@ function App() {
           ></Route>
           <Route
             exact
-            path="/movies/sessions/:sessionId/seats/userInfo"
-            element={<UserInfo />}
+            path="/movies/sessions/:sessionId/seats/summary"
+            element={<Summary />}
           ></Route>
         </Routes>
       </BrowserRouter>

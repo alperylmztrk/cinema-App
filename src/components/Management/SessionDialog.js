@@ -4,12 +4,6 @@ import {
   Stack,
   TextField,
   Dialog,
-  Typography,
-  Snackbar,
-  Alert,
-  AlertTitle,
-  Box,
-  IconButton,
 } from "@mui/material";
 import * as React from "react";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
@@ -21,35 +15,30 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { request } from "../../helpers/axios_helper";
+import CustomSnackbar from "../Utilities/CustomSnackbar";
 
-export default function AssignMovieDialog(props) {
+export default function SessionDialog(props) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedHall, setSelectedHall] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(new Date());
 
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openFail, setOpenFail] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [title, setTitle] = useState("");
+  const [msg, setMsg] = useState("");
+  const [severity, setSeverity] = useState("");
 
-  const handleCloseSuccess = (event, reason) => {
+  const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
-    setOpenSuccess(false);
-  };
-
-  const handleCloseFail = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenFail(false);
+    setOpenSnackbar(false);
   };
 
   const handleEmptyMovieAndHall = () => {
-    setErrorMsg("Lütfen film ve salon seçiniz");
-    setOpenFail(true);
+    setSeverity("error");
+    setTitle("Seans Oluşturulamadı!");
+    setMsg("Lütfen film ve salon seçiniz");
+    setOpenSnackbar(true);
   };
 
   const assignMovie = () => {
@@ -63,19 +52,29 @@ export default function AssignMovieDialog(props) {
       })
     )
       .then((response) => {
-        if (response.status == 200) {
-            props.kapat();
-            setOpenSuccess(true);
+        if (response.status === 200) {
+          props.kapat();
+          setSeverity("success");
+          setTitle("Seans Oluşturuldu");
+          setMsg(
+            selectedMovie !== null &&
+              selectedHall !== null &&
+              selectedMovie.title +
+                ",  " +
+                selectedHall.name +
+                "'e atandı ve " +
+                "başlangıç zamanı " +
+                format(selectedDateTime, "dd/MM/yyyy HH:mm") +
+                " olarak ayarlandı."
+          );
+          setOpenSnackbar(true);
         }
         console.log(response.data);
       })
       .catch((error) => {
         console.log("hataaa  " + error);
         console.log(error.response.data);
-    
       });
-
-    
   };
 
   return (
@@ -166,38 +165,13 @@ export default function AssignMovieDialog(props) {
         </DialogActions>
       </Dialog>
 
-      <Snackbar
-        sx={{ marginTop: 6 }}
-        open={openSuccess}
-        autoHideDuration={4000}
-        onClose={handleCloseSuccess}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity="success">
-          <AlertTitle>Film Atandı</AlertTitle>
-          {selectedMovie !== null &&
-            selectedHall !== null &&
-            selectedMovie.title +
-              ",  " +
-              selectedHall.name +
-              "'e atandı ve " +
-              "başlangıç zamanı " +
-              format(selectedDateTime, "dd/MM/yyyy HH:mm") +
-              " olarak ayarlandı."}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        sx={{ marginTop: 6 }}
-        open={openFail}
-        autoHideDuration={3000}
-        onClose={handleCloseFail}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity="error">
-          <AlertTitle>Film Atanamadı!!!</AlertTitle>
-          {errorMsg}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={severity}
+        title={title}
+        message={msg}
+      ></CustomSnackbar>
     </div>
   );
 }

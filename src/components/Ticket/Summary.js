@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { useLocation, useParams } from "react-router-dom";
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button,
-  Divider,
-  Snackbar,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Divider, Stack } from "@mui/material";
 import sinemaImg from "../../Images/sinema.jpg";
 import { format } from "date-fns";
 import DateIcon from "@mui/icons-material/CalendarMonth";
@@ -19,7 +10,7 @@ import SeatIcon from "@mui/icons-material/Weekend";
 import Ticket from "./Ticket";
 import { request } from "../../helpers/axios_helper";
 
-function UserInfo() {
+function Summary() {
   const styles = {
     box: {
       backgroundImage: `url(${sinemaImg})`,
@@ -37,18 +28,14 @@ function UserInfo() {
   const { sessionId } = useParams();
   const location = useLocation();
 
-  useEffect(() => {
-    console.log(location.state.selectedSeats);
-  }, []);
-
   let selectedSeats = [];
   let selectedSeatNumbers = [];
-  let selectedSeatIds = []
+  let selectedSeatIds = [];
 
   selectedSeats = location.state.selectedSeats;
   selectedSeats.map((selectedSeat) => {
     selectedSeatNumbers.push(selectedSeat.number);
-    selectedSeatIds.push(selectedSeat.id)
+    selectedSeatIds.push(selectedSeat.id);
   });
   selectedSeatNumbers = selectedSeatNumbers.sort(function (a, b) {
     return a.localeCompare(b, "en", { numeric: true });
@@ -56,16 +43,29 @@ function UserInfo() {
   console.log(selectedSeatNumbers);
   console.log(selectedSeatIds);
 
-  const [assignedMovie, setAssignedMovie] = useState();
+  const [session, setSession] = useState();
   const [isLoadedAssignedMovie, setIsLoadedAssignedMovie] = useState(false);
   const [errorAssignedMovie, setErrorAssignedMovie] = useState(null);
   let dateTime;
   let date = "";
   let time = "";
-  let selectedReservedSeats = [];
 
-  if (isLoadedAssignedMovie) {
-    dateTime = new Date(assignedMovie.startDateTime);
+  useEffect(() => {
+    request("GET", "sessions/" + sessionId)
+      .then((response) => {
+        console.log(response.data);
+        setSession(response.data);
+        setIsLoadedAssignedMovie(true);
+      })
+      .catch((error) => {
+        console.log("hataaa  " + error);
+        setIsLoadedAssignedMovie(true);
+        setErrorAssignedMovie(error);
+      });
+  }, [sessionId]);
+
+  if (isLoadedAssignedMovie && !errorAssignedMovie) {
+    dateTime = new Date(session.startDateTime);
     date =
       (dateTime.getDate() < 10 ? "0" : "") +
       dateTime.getDate() +
@@ -84,58 +84,30 @@ function UserInfo() {
     console.log(time);
   }
 
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [username, setUsername] = useState("");
-
-  const [generatedUser, setGeneratedUser] = useState(null);
-  const [isGenerateUser, setIsGenerateUser] = useState(false);
-
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    request("GET", "sessions/" + sessionId)
+  const handleClick = () => {
+    request(
+      "POST",
+      "/tickets",
+      JSON.stringify({
+        sessionId: sessionId,
+        selectedSeatIds: selectedSeatIds,
+      })
+    )
       .then((response) => {
+        if (response.status === 200) {
+          setTicket(true);
+          console.log("Bilet oluşturuldu...");
+        }
         console.log(response.data);
-        setAssignedMovie(response.data);
-        setIsLoadedAssignedMovie(true);
       })
       .catch((error) => {
         console.log("hataaa  " + error);
-        setIsLoadedAssignedMovie(true);
-        setErrorAssignedMovie(error);
+        console.log(error.response.data);
       });
-  }, [sessionId]);
-
- 
-  const handleClick = () => {
-  
-    request(
-        "POST",
-        "/tickets",
-        JSON.stringify({
-          sessionId: sessionId,
-          selectedSeatIds: selectedSeatIds
-        })
-      )
-        .then((response) => {
-          if (response.status == 200) {
-          
-            console.log("Bilet oluşturuldu..." );
-          }
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log("hataaa  " + error);
-          console.log(error.response.data);
-        });
-    
-
   };
 
-  const [ticket, setTicket] = useState(null);
+  const [ticket, setTicket] = useState(false);
 
- 
   if (errorAssignedMovie) {
     return <div>Error !!!</div>;
   } else if (!isLoadedAssignedMovie) {
@@ -175,7 +147,7 @@ function UserInfo() {
               <Box
                 component="img"
                 alt="Poster"
-                src={assignedMovie.posterImgPath}
+                src={session.posterImgPath}
                 sx={{
                   width: "10vw",
                 }}
@@ -223,12 +195,11 @@ function UserInfo() {
           </Stack>
         </Box>
 
-        {ticket != null && (
+        {ticket && (
           <Ticket
-            user={generatedUser}
             startDate={date}
             startTime={time}
-            hallName={assignedMovie.hall.name}
+            hallName={session.hallName}
             selectedSeatNumbers={selectedSeatNumbers.toString()}
           ></Ticket>
         )}
@@ -236,4 +207,4 @@ function UserInfo() {
     );
   }
 }
-export default UserInfo;
+export default Summary;
