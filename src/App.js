@@ -11,6 +11,8 @@ import { useAxiosInterceptor } from "./helpers/axios_helper";
 import ErrorDialog from "./components/Error/ErrorDialog";
 import AdminRoute from "./components/auth/AdminRoute";
 import Summary from "./components/Ticket/Summary";
+import Particle  from "./components/Particle/Particle";
+import './App.css';
 
 function App() {
   const { error, setError } = useAxiosInterceptor();
@@ -21,6 +23,8 @@ function App() {
 
   return (
     <div style={{display:'flex', flexDirection:'column',height:'100vh'}}>
+
+      <Particle id="particle" />
       <BrowserRouter>
         <ErrorDialog error={error} onClose={handleClose}></ErrorDialog>
         <NavBar />
